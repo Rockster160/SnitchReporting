@@ -8,20 +8,11 @@ Gem::Specification.new do |spec|
   spec.name        = "snitch_reporting"
   spec.version     = SnitchReporting::VERSION
   spec.authors     = ["Rocco Nicholls"]
-  spec.email       = ["rocco11nicholls@gmail.com"]
-  spec.homepage    = "TODO"
-  spec.summary     = "TODO: Summary of SnitchReporting."
-  spec.description = "TODO: Description of SnitchReporting."
+  spec.email       = ["support@ardesian.com"]
+  spec.homepage    = "https://github.com/Rockster160/SnitchReporting"
+  spec.summary     = "Adds a localized error reporting/tracking system."
+  spec.description = "Tracks errors using a middle man and provides an interface in order to interact and view the errors."
   spec.license     = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
