@@ -12,4 +12,5 @@
  *
  *= require_tree .
  *= require_self
+ *= require snitch_reporting/snitch_report
  */

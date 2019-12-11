@@ -1,0 +1,188 @@
+<% content_for(:header_buttons) do %>
+  <%= link_to "Edit", edit_bug_report_path(@bug_report), class: "orca-btn white" %>
+<% end %>
+
+<%= render partial: "layouts/back_button", locals: { link_path: bug_reports_path } %>
+
+<div class="bug-report">
+  <div class="report-details">
+      <% if @bug_report.resolved? %>
+        <div class="banner log-level-status success">
+          Resolved on <%= @bug_report.resolved_at&.to_formatted_s(:simple_with_time) %>
+          by <%= @bug_report.resolved_by.full_name %>
+        </div>
+      <% end %>
+
+      <% if @bug_report.ignored? %>
+        <div class="banner log-level-status debug">
+          Ignored on <%= @bug_report.ignored_at&.to_formatted_s(:simple_with_time) %>
+          by <%= @bug_report.ignored_by.full_name %>
+        </div>
+      <% end %>
+      <br>
+    <h1><%= @bug_report.title %></h1>
+    <div class="banner log-level-status <%= @bug_report.log_level %>"><%= @bug_report.log_level %></div>
+  </div>
+
+  <div class="occurrences">
+    <div class="skinny-container">
+      <div class="ipad-table">
+        <div class="trow">
+          <div class="tcell">Total Occurrences</div>
+          <div class="tcell"><%= number_with_delimiter(@bug_report.occurrences_count) %></div>
+        </div>
+        <div class="trow">
+          <div class="tcell">First Occurrence</div>
+          <div class="tcell"><%= @bug_report.first_occurrence_at&.to_formatted_s(:simple_with_time) %></div>
+        </div>
+        <div class="trow">
+          <div class="tcell">Most Recent Occurrence</div>
+          <div class="tcell"><%= @bug_report.last_occurrence_at&.to_formatted_s(:simple_with_time) %></div>
+        </div>
+        <div class="trow">
+          <div class="tcell">Assigned To</div>
+          <div class="tcell"><%= @bug_report.assigned_to.try(:full_name) || "--" %></div>
+        </div>
+      </div>
+
+      <pre style="white-space: pre-wrap; word-break: keep-all;"><p><%= @bug_report.custom_details %></p></pre>
+    </div>
+
+    <div class="text-center">
+      <% if @bug_report.resolved? %>
+        <%= link_to bug_report_path(@bug_report, resolved: false), method: :patch, class: "update-icon red" do %>
+          <i class="fa fa-times"></i>
+        <% end %>
+      <% else %>
+        <%= link_to bug_report_path(@bug_report, resolved: true), method: :patch, class: "update-icon green" do %>
+          <i class="fa fa-check"></i>
+        <% end %>
+      <% end %>
+
+      <% if @bug_report.ignored? %>
+        <%= link_to bug_report_path(@bug_report, ignored: false), method: :patch, class: "update-icon" do %>
+          <i class="fa fa-bell"></i>
+        <% end %>
+      <% else %>
+        <%= link_to bug_report_path(@bug_report, ignored: true), method: :patch, class: "update-icon" do %>
+          <i class="fa fa-bell-slash"></i>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= paginate @occurrences %>
+
+    <div class="full-size-container">
+      <div class="ipad-table">
+        <div class="thead">
+          <% @formatted_occurrence_data[:keys].each do |detail_key| %>
+            <div class="tcell"><%= detail_key %></div>
+          <% end %>
+        </div>
+
+        <% @formatted_occurrence_data[:details].each do |occurrence_detail| %>
+          <a href="#occurrence-stacktrace-<%= occurrence_detail[:id] %>" class="trow reveal-occurrence">
+            <% occurrence_detail[:details].each do |detail_val| %>
+              <div class="tcell text-left" title="<%= detail_val %>">
+                <%= truncate(detail_val.to_s, length: 50) %>
+              </div>
+            <% end %>
+          </a>
+        <% end %>
+      </div>
+    </div>
+
+    <%= paginate @occurrences %>
+
+    <% @occurrences.each do |occurrence| %>
+      <div class="occurrence-details" id="occurrence-stacktrace-<%= occurrence.id %>">
+        <h3>Occurrence #<%= occurrence.occurrence_position %></h3>
+        <div class="compress-wrapper" data-wrapname="details">
+          <a href="" class="open-compressed" data-target="details"></a>
+          <code class="prettify compressed " data-title="Details"
+            ><%= JSON.pretty_generate(occurrence.details) -%>
+          </code>
+        </div>
+        <div class="compress-wrapper" data-wrapname="filtered-stacktrace">
+          <a href="" class="open-compressed" data-target="filtered-stacktrace"></a>
+          <code class="prettify compressed" data-title="Filtered Stacktrace"
+            ><%= occurrence.filtered_backtrace.join("\n") -%>
+          </code>
+        </div>
+        <div class="compress-wrapper" data-wrapname="stacktrace">
+          <a href="" class="open-compressed" data-target="stacktrace"></a>
+          <code class="prettify compressed " data-title="Full Stacktrace"
+            ><%= occurrence.backtrace.join("\n") -%>
+          </code>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="comments">
+    <div class="skinny-container">
+      <div class="new-comment-form">
+        <%= form_for @bug_report.comments.new, url: comment_bug_report_path(@bug_report) do |f| %>
+          <%= f.text_area :message, rows: 8 %>
+
+          <div class="text-right">
+            <% if @bug_report.ignored? %>
+              <%= f.button :ignored, value: false, name: :ignored do %>
+                Comment &amp; Unignore
+              <% end %>
+            <% else %>
+              <%= f.button :ignored, value: true, name: :ignored do %>
+                Comment &amp; Ignore
+              <% end %>
+            <% end %>
+            <% if @bug_report.resolved? %>
+              <%= f.button :resolved, value: false, name: :resolved do %>
+                Comment &amp; Unresolve
+              <% end %>
+            <% else %>
+              <%= f.button :resolved, value: true, name: :resolved do %>
+                Comment &amp; Resolve
+              <% end %>
+            <% end %>
+            <%= f.submit "Comment", class: "orca-btn" %>
+          </div>
+        <% end %>
+      </div>
+
+      <% @comments.each do |comment| %>
+        <div class="comment-wrapper">
+          <div class="timestamp"><%= comment.created_at&.to_formatted_s(:simple_with_time) %></div>
+          <div class="author">
+            <div class="avatar"><%= image_tag comment.avatar %></div>
+            <div class="name"><%= comment.author_name %></div>
+          </div>
+          <div class="message linkify"><%= comment.message %></div>
+          <div class="status text-right">
+            <% if comment.resolved.nil? %>
+              <%# No-op %>
+            <% elsif comment.resolved? %>
+              <div class="update-icon green">
+                <i class="fa fa-check"></i>
+              </div>
+            <% else %>
+              <div class="update-icon red">
+                <i class="fa fa-times"></i>
+              </div>
+            <% end %>
+            <% if comment.ignored.nil? %>
+              <%# No-op %>
+            <% elsif comment.ignored? %>
+              <div class="update-icon">
+                <i class="fa fa-bell-slash"></i>
+              </div>
+            <% else %>
+              <div class="update-icon">
+                <i class="fa fa-bell"></i>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

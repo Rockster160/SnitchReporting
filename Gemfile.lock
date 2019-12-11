@@ -2,7 +2,9 @@ PATH
   remote: .
   specs:
     snitch_reporting (0.1.0)
+      kaminari
       rails (~> 5.2.3)
+      sass-rails
 
 GEM
   remote: https://rubygems.org/
@@ -48,18 +50,28 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    annotate (3.0.3)
-      activerecord (>= 3.2, < 7.0)
-      rake (>= 10.4, < 14.0)
     arel (9.0.0)
     builder (3.2.3)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     erubi (1.8.0)
+    ffi (1.11.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
+    kaminari (1.1.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.1.1)
+      kaminari-activerecord (= 1.1.1)
+      kaminari-core (= 1.1.1)
+    kaminari-actionview (1.1.1)
+      actionview
+      kaminari-core (= 1.1.1)
+    kaminari-activerecord (1.1.1)
+      activerecord
+      kaminari-core (= 1.1.1)
+    kaminari-core (1.1.1)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -104,6 +116,20 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (12.3.2)
+    rb-fsevent (0.10.3)
+    rb-inotify (0.10.0)
+      ffi (~> 1.0)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+    sass-rails (5.0.7)
+      railties (>= 4.0.0, < 6)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -113,6 +139,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.20.3)
     thread_safe (0.3.6)
+    tilt (2.0.9)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     websocket-driver (0.7.1)
@@ -123,8 +150,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  annotate
+  kaminari
   pg
+  sass-rails
   snitch_reporting!
 
 BUNDLED WITH

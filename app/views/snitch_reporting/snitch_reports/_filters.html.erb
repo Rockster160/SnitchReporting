@@ -1,0 +1,16 @@
+<div class="tabs-container">
+  <% all_path = current_params.merge(param => :all) %>
+  <% current_tabs = (current_params[param] || []).map(&:to_sym) %>
+  <%= link_to "All", all_path, class: "tab white-label-text #{'selected' if current_tabs.none?}" %>
+  <% available_tabs.each do |tab_label| %>
+    <% new_tabs = current_tabs.include?(tab_label) ? (current_tabs - [tab_label]) : (current_tabs + [tab_label]) %>
+    <%
+      new_path = if new_tabs.sort == available_tabs.sort
+        all_path
+      else
+        {param => new_tabs}.reverse_merge(all_path)
+      end
+    %>
+    <%= link_to tab_label.to_s.titleize, new_path, class: "tab white-label-text #{'selected' if current_tabs.include?(tab_label)}" %>
+  <% end %>
+</div>

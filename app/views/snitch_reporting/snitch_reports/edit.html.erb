@@ -1,0 +1,19 @@
+<div class="skinny-container">
+  <%= form_for @bug_report do |f| %>
+    <%= hidden_field_tag :redirect_to_report, true %>
+
+    <div class="form-field">
+      <%= f.label :title %>
+      <%= f.text_area :title %>
+    </div>
+
+    <div class="form-field">
+      <%= f.label :custom_details, "Notes" %>
+      <%= f.text_area :custom_details %>
+    </div>
+
+    <div class="form-field">
+      <%= f.submit "Submit", class: "orca-btn" %>
+    </div>
+  <% end %>
+</div>

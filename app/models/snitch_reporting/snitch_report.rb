@@ -26,6 +26,10 @@ module SnitchReporting
       def fatal(*args);   report(:fatal,   args); end
       def unknown(*args); report(:unknown, args); end
 
+      def sources
+        pluck(:source).uniq
+      end
+
       def report(log_level, *args)
         exceptions, arg_hash, arg_values = format_args(args)
         env, klass, base_exception = extract_base_variables(exceptions, arg_hash, arg_values)
