@@ -1,4 +1,5 @@
 // Must include Jquery
+// Or rewrite to use pure JS
 // $(document).ready(function() {
 //
 //   function revealStacktrace() {

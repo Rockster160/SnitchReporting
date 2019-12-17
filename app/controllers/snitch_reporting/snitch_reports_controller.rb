@@ -15,9 +15,9 @@ module SnitchReporting
     end
 
     def show
-      @occurrences = @snitch_report.occurrences.order(created_at: :desc).page(params[:page]).per(params[:per])
-      @formatted_occurrence_data = @occurrences.staggered_occurrence_data
-      @comments = @snitch_report.comments.order(created_at: :desc)
+      # @occurrences = @snitch_report.occurrences.order(created_at: :desc).page(params[:page]).per(params[:per])
+      # @formatted_occurrence_data = @occurrences.staggered_occurrence_data
+      # @comments = @snitch_report.comments.order(created_at: :desc)
     end
 
     def update

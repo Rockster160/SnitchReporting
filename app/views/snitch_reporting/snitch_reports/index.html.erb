@@ -1,91 +1,41 @@
-<% permitted_params = [:sort, :order, :by_fuzzy_text, :ignored, :resolved, level_tags: [], source_tags: [], severity_tags: []] %>
-<% merged_params = params.permit(permitted_params).reverse_merge(@report_preferences) %>
-<div class="tabs-container">
-  <% toggleable_resolved_status = merged_params[:resolved] == "true" ? :resolved : :unresolved %>
-  <% [:resolved, :unresolved].each do |resolved_status| %>
-    <%= link_to resolved_status.capitalize, {resolved: resolved_status == :resolved}.reverse_merge(merged_params), class: "tab white-label-text #{'selected' if toggleable_resolved_status == resolved_status}" %>
-  <% end %>
-
-  <% toggleable_ignored_status = merged_params[:ignored] == "true" ? :ignored : :unignored %>
-  <% [:ignored, :unignored].each do |ignored_status| %>
-    <%= link_to ignored_status.capitalize, {ignored: ignored_status == :ignored}.reverse_merge(merged_params), class: "tab white-label-text #{'selected' if toggleable_ignored_status == ignored_status}" %>
-  <% end %>
-</div>
-
-<%= render partial: "filters", locals: { param: :level_tags,    current_params: merged_params, available_tabs: [:debug, :info, :warn, :error, :fatal, :unknown] } %>
-<%= render partial: "filters", locals: { param: :source_tags,   current_params: merged_params, available_tabs: ::SnitchReporting::SnitchReport.sources } %>
-<%= render partial: "filters", locals: { param: :severity_tags, current_params: merged_params, available_tabs: ::SnitchReporting::SnitchReport.severities.keys.map(&:to_sym) } %>
-
-<div class="search-field-container white-label-primary">
-  <div class="orca-btn search-filter-btn filter-btn">Filter</div>
-  <div class="search-field filter-field">
-    <%= text_field_tag :by_fuzzy_text, merged_params[:by_fuzzy_text], autocomplete: "off", placeholder: "Search" %>
-  </div>
-</div>
-
-<%= paginate @snitch_reports %>
-
-<div class="ipad-table snitch-report-table">
-  <div class="thead">
-    <!-- <div class="tcell">Trend</div> -->
-    <%= sortable "Count", "count", class: "tcell" %>
-    <!-- <div class="tcell">Users</div> -->
-    <div class="tcell title-col">Title</div>
-    <%= sortable "Last", "last", class: "tcell" %>
-    <div class="tcell">Source</div>
-    <div class="tcell">Severity</div>
-    <div class="tcell">Resolve</div>
-    <div class="tcell">Assignee</div>
-  </div>
-
-  <% @snitch_reports.each do |report| %>
-    <div class="trow">
-      <div class="tcell"><%= number_with_delimiter(report.occurrences_count.to_i) %></div>
-      <a href="<%= snitch_report_path(report) %>" class="tcell text-left title-cell">
-        <%
-          fa_icon = case report.log_level.to_s.to_sym
-            when :debug   then :asterisk
-            when :info    then :info
-            when :warn    then :exclamation
-            when :error   then :snitch
-            when :fatal   then :times
-            when :unknown then :question
-            end
-        %>
-        <i class="fa fa-<%= fa_icon %> log-level-status-color <%= report.log_level %>"></i>
-        <%= report.title %>
-      </a>
-      <div class="tcell"><%= report.timeago %></div>
-      <div class="tcell">
-        <%= select_tag "report[source]", options_for_select(BugReport.sources.keys.map { |key| [key.titleize, key] }, selected: report.source), { class: "orca-select update-dropdown", data: { url: snitch_report_path(report), name: :source } } %>
-      </div>
-      <div class="tcell">
-        <%= select_tag "report[severity]", options_for_select(BugReport.severities.keys.map { |key| [key.titleize, key] }, selected: report.severity), { class: "orca-select update-dropdown", data: { url: snitch_report_path(report), name: :severity } } %>
-      </div>
-      <div class="tcell update-col-wrapper">
-        <% if report.resolved? %>
-          <%= link_to snitch_report_path(report, resolved: false), method: :patch, class: "update-icon red" do %>
-            <i class="fa fa-times"></i>
-          <% end %>
-        <% else %>
-          <%= link_to snitch_report_path(report, resolved: true), method: :patch, class: "update-icon green" do %>
-            <i class="fa fa-check"></i>
-          <% end %>
-        <% end %>
-        <br>
-        <% if report.ignored? %>
-          <%= link_to snitch_report_path(report, ignored: false), method: :patch, class: "update-icon" do %>
-            <i class="fa fa-bell"></i>
-          <% end %>
-        <% else %>
-          <%= link_to snitch_report_path(report, ignored: true), method: :patch, class: "update-icon" do %>
-            <i class="fa fa-bell-slash"></i>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="tcell">
-        <%= select_tag "report[assigned_to_id]", options_for_select(::Helix::OrcaUser.kept.map { |user| [user.full_name.presence || "User ##{user.id}", user.id] }, selected: report.assigned_to_id), { class: "orca-select update-dropdown", include_blank: "--", data: { url: snitch_report_path(report), name: :assigned_to_id } } %>
-      </div>
+<div class="snitch-reporting">
+  <div class="snitch-nav">
+    <div class="nav-tab">
+      <input type="search" name="search" value="<%= params[:search] %>" placeholder="Search">
     </div>
-  <% end %>
+    <a href="<%#  %>">Status</a>
+    <a href="<%#  %>">Assignee</a>
+    <a href="<%#  %>">Occurred</a>
+    <a href="<%#  %>">Ignored</a>
+  </div>
+
+  <div class="snitch-index">
+    <div class="snitch-title-section">
+      <h1><%= Rails.application.class.parent.name %></h1>
+      Sort
+    </div>
+
+    <div class="snitch-errors">
+      <table>
+        <thead>
+          <tr>
+            <th>Error</th>
+            <th style="width: 100px;">Last</th>
+            <th style="width: 1px;">Times</th>
+            <th style="width: 1px;">Assigned</th>
+            <th style="width: 1px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NoMethodError in devices#display_criteria</td>
+            <td>7:04 am -07:00</td>
+            <td>10,384</td>
+            <td>-</td>
+            <td>Unresolved</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

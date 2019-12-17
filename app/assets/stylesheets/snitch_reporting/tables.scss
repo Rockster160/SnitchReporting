@@ -1,0 +1,40 @@
+.snitch-reporting {
+  table {
+    border-spacing: 0 0;
+    width: 100%;
+
+    .main-section {
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid $border-grey;
+
+      padding: 10px;
+      text-align: left;
+
+      &.text-center {
+        text-align: center;
+      }
+    }
+  }
+
+  .snitch-errors {
+    tbody tr:nth-child(odd) {
+      background: $background-grey;
+    }
+  }
+
+  .snitch-section {
+    &#summary {
+      table {
+        td:first-of-type {
+          background: $background-grey;
+          color: #AAA;
+          font-size: 12px;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.snitch-reporting {
+  .snitch-btn {
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    margin: 2px;
+    border: 1px solid $border-grey;
+    border-radius: 6px;
+    background: linear-gradient(white, $background-grey);
+    padding: 8px;
+    color: $text-color;
+    text-decoration: none;
+
+    &:hover {
+      background: linear-gradient($background-grey, $background-grey, white);
+    }
+
+    &.danger {
+      background: linear-gradient($danger, darken($danger, 15%));
+      color: white;
+
+      &:hover {
+        background: linear-gradient(darken($danger, 15%), $danger, $danger);
+      }
+    }
+  }
+}
