@@ -10,37 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_10_224002) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "snitch_reporting_snitch_occurrences", force: :cascade do |t|
-    t.bigint "snitch_report_id"
-    t.string "klass"
-    t.string "title"
-    t.text "details"
-    t.text "backtrace"
-    t.integer "occurrence_position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["snitch_report_id"], name: "index_snitch_reporting_snitch_occurrences_on_snitch_report_id"
-  end
-
-  create_table "snitch_reporting_snitch_reports", force: :cascade do |t|
-    t.datetime "first_occurrence_at"
-    t.datetime "last_occurrence_at"
-    t.integer "occurrences_count"
-    t.string "title"
-    t.string "slug"
-    t.string "log_level"
-    t.integer "severity"
-    t.text "source"
-    t.text "custom_details"
-    t.datetime "resolved_at"
-    t.datetime "ignored_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
 end
