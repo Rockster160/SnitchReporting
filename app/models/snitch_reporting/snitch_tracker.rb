@@ -1,5 +1,14 @@
 # belongs_to :snitch_report
 # date :date
 # bigint :count
-class SnitchReporting::SnitchReport < ApplicationRecord
+class SnitchReporting::SnitchTracker < ApplicationRecord
+  belongs_to :snitch_report
+
+  def self.tracker_for_date(date=Date.today)
+    find_or_create_by(date: date)
+  end
+
+  def self.count_for_date_range(start, end)
+    where(date: start..end).sum(:count)
+  end
 end
