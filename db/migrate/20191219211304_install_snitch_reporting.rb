@@ -2,6 +2,7 @@ class InstallSnitchReporting < ActiveRecord::Migration[5.2]
   def change
     create_table :snitch_reports do |t|
       t.text :error
+      t.text :message
       t.integer :log_level
       t.string :klass
       t.string :action
