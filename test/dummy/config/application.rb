@@ -17,3 +17,4 @@ module Dummy
   end
 end
 
+Rails.application.config.middleware.use SnitchReporting::Rack

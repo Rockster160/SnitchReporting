@@ -5,13 +5,14 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
 
   layout "application"
 
-  #   def index
-  #     @snitch_reports = ::SnitchReporting::SnitchReport.all
-  #
-  #     set_report_preferences
-  #     filter_reports
-  #     sort_reports
-  #   end
+    def index
+      asd
+      # @snitch_reports = ::SnitchReporting::SnitchReport.all
+      #
+      # set_report_preferences
+      # filter_reports
+      # sort_reports
+    end
   #
   #   def show
   #     # @occurrences = @snitch_report.occurrences.order(created_at: :desc).page(params[:page]).per(params[:per])

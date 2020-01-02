@@ -39,7 +39,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
 
       report_title = retrieve_report_title(base_exception, arg_hash)
       report = retrieve_or_create_existing_report(log_level, santize_title(report_title), env, exception, arg_hash)
-      return SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.exists?
+      return SnitchReporting::SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.exists?
 
       report_data = gather_report_data(env, exceptions, arg_hash, arg_values)
 
@@ -53,11 +53,11 @@ class SnitchReporting::SnitchReport < ApplicationRecord
         headers:     env&.reject { |k, v| k.to_s.include?(".") || !v.is_a?(String) },
         always_notify: always_notify
       )
-      return SnitchReport.error("Failed to save occurrence.", occurrence.errors.full_messages) unless occurrence.exists?
+      return SnitchReporting::SnitchReport.error("Failed to save occurrence.", occurrence.errors.full_messages) unless occurrence.exists?
       occurrence
     rescue StandardError => ex
       env ||= {}
-      SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
+      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
     end
 
     def format_args(args)
