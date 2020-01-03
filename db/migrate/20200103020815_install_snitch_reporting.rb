@@ -1,6 +1,6 @@
 class InstallSnitchReporting < ActiveRecord::Migration[5.2]
   def change
-    create_table :snitch_reports do |t|
+    create_table :snitch_reporting_snitch_reports do |t|
       t.text :error
       t.text :message
       t.integer :log_level
@@ -20,8 +20,8 @@ class InstallSnitchReporting < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    create_table :snitch_occurrences do |t|
-      t.belongs_to :snitch_report
+    create_table :snitch_reporting_snitch_occurrences do |t|
+      t.belongs_to :report
       t.string :http_method
       t.string :url
       t.text :user_agent
@@ -33,24 +33,24 @@ class InstallSnitchReporting < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    create_table :snitch_comments do |t|
-      t.belongs_to :snitch_report
+    create_table :snitch_reporting_snitch_comments do |t|
+      t.belongs_to :report
       t.belongs_to :author
       t.text :body
 
       t.timestamps
     end
 
-    create_table :snitch_histories do |t|
-      t.belongs_to :snitch_report
+    create_table :snitch_reporting_snitch_histories do |t|
+      t.belongs_to :report
       t.belongs_to :user
       t.text :text
 
       t.timestamps
     end
 
-    create_table :snitch_trackers do |t|
-      t.belongs_to :snitch_report
+    create_table :snitch_reporting_snitch_trackers do |t|
+      t.belongs_to :report
       t.date :date
       t.bigint :count
 

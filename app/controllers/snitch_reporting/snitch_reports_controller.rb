@@ -6,9 +6,8 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   layout "application"
 
     def index
-      asd
-      # @snitch_reports = ::SnitchReporting::SnitchReport.all
-      #
+      # @snitch_reports = ::SnitchReporting::SnitchReport.order(:desc)
+
       # set_report_preferences
       # filter_reports
       # sort_reports

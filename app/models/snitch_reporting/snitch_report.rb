@@ -15,14 +15,23 @@
 
 class SnitchReporting::SnitchReport < ApplicationRecord
   attr_accessor :acting_user
-  has_many :snitch_occurrences
-  has_many :snitch_trackers
+  has_many :occurrences, class_name: "SnitchReporting::SnitchOccurrence", foreign_key: :report_id
+  has_many :trackers, class_name: "SnitchReporting::SnitchTracker", foreign_key: :report_id
 
   scope :resolved,      -> { where.not(resolved_at: nil) }
   scope :unresolved,    -> { where(resolved_at: nil) }
   scope :ignored,       -> { where.not(ignored_at: nil) }
   scope :unignored,     -> { where(ignored_at: nil) }
   scope :by_level,      ->(*level_tags) { where(log_level: level_tags) }
+
+  enum log_level: {
+    debug:   1,
+    info:    2,
+    warn:    3,
+    error:   4,
+    fatal:   5,
+    unknown: 6
+  }
 
   class << self
     def debug(*args);   report(:debug,   args); end
@@ -38,26 +47,27 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       always_notify = arg_hash.delete(:always_notify)
 
       report_title = retrieve_report_title(base_exception, arg_hash)
-      report = retrieve_or_create_existing_report(log_level, santize_title(report_title), env, exception, arg_hash)
-      return SnitchReporting::SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.exists?
+      report = retrieve_or_create_existing_report(log_level, santize_title(report_title), env, base_exception, arg_hash)
+      return SnitchReporting::SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.persisted?
 
       report_data = gather_report_data(env, exceptions, arg_hash, arg_values)
 
       occurrence = report.occurrences.create(
-        http_method: env["REQUEST_METHOD"],
-        url:         env["HTTP_ORIGIN"] + env["REQUEST_URI"],
-        user_agent:  env["HTTP_USER_AGENT"],
+        http_method: env[:REQUEST_METHOD],
+        url:         env[:REQUEST_URI],
+        user_agent:  env[:HTTP_USER_AGENT],
         backtrace:   trace_from_exception(base_exception),
         context:     report_data,
-        params:      env&.dig("action_controller.instance").params.permit!.to_h.except(:action, :controller),
+        params:      env&.dig(:"action_controller.instance")&.params&.permit!&.to_h&.except(:action, :controller),
         headers:     env&.reject { |k, v| k.to_s.include?(".") || !v.is_a?(String) },
         always_notify: always_notify
       )
-      return SnitchReporting::SnitchReport.error("Failed to save occurrence.", occurrence.errors.full_messages) unless occurrence.exists?
+      return SnitchReporting::SnitchReport.error("Failed to save occurrence.", occurrence.errors.full_messages) unless occurrence.persisted?
       occurrence
     rescue StandardError => ex
       env ||= {}
-      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
+      binding.pry
+      # SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
     end
 
     def format_args(args)
@@ -173,11 +183,11 @@ class SnitchReporting::SnitchReport < ApplicationRecord
 
     def retrieve_or_create_existing_report(log_level, sanitized_title, env, exception, arg_hash)
       report_identifiable_data = {
-        error:     exception.try(:class) || sanitized_title.presence,
+        error:     (exception.try(:class) || sanitized_title.presence).to_s,
         message:   sanitized_title.presence,
         log_level: log_level,
-        klass:     env&.dig("action_controller.instance").class.to_s.split("::").last.gsub("Controller", ""),
-        action:    env&.dig("action_controller.instance").class.action_name
+        klass:     env&.dig(:"action_controller.instance").try(:class).to_s.split("::").last&.gsub("Controller", ""),
+        action:    env&.dig(:"action_controller.instance").try(:action_name)
       }
 
       report = find_by(report_identifiable_data) if sanitized_title.present?
@@ -242,11 +252,11 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       ]
     end
   end
-  #
-  # def tracker_for_date(date=Date.today)
-  #   snitch_trackers.tracker_for_date(date)
-  # end
-  #
+
+  def tracker_for_date(date=Date.today)
+    trackers.tracker_for_date(date)
+  end
+
   # def resolved?; resolved_at?; end
   # def ignored?; ignored_at?; end
   #

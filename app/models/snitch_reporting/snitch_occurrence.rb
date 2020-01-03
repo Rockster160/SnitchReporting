@@ -6,17 +6,18 @@
 # text :context
 # text :params
 # text :headers
-class SnitchReporting::SnitchReport < ApplicationRecord
+
+class SnitchReporting::SnitchOccurrence < ApplicationRecord
   attr_accessor :always_notify, :acting_user
 
-  belongs_to :snitch_report
+  belongs_to :report, class_name: "SnitchReporting::SnitchReport"
 
   after_create :mark_occurrence
 
-  serialize :backtrace, ::Service::JSONWrapper
-  serialize :context,   ::Service::JSONWrapper
-  serialize :params,    ::Service::JSONWrapper
-  serialize :headers,   ::Service::JSONWrapper
+  serialize :backtrace, ::SnitchReporting::Service::JSONWrapper
+  serialize :context,   ::SnitchReporting::Service::JSONWrapper
+  serialize :params,    ::SnitchReporting::Service::JSONWrapper
+  serialize :headers,   ::SnitchReporting::Service::JSONWrapper
 
   # def self.staggered_occurrence_data
   #   data = {}
@@ -81,12 +82,14 @@ class SnitchReporting::SnitchReport < ApplicationRecord
 
     report_updates = { last_occurrence_at: Time.current, resolved_at: nil }
     report_updates[:first_occurrence_at] = Time.current if report.first_occurrence_at.nil?
-    report_updates[:occurrence_count] = report.occurrence_count + 1
+    report_updates[:occurrence_count] = report.occurrence_count.to_i + 1
 
     report.update(report_updates)
 
     tracker = report.tracker_for_date
-    tracker.update(count: tracker.count + 1)
+    now = Time.current
+    todays_occurrences = report.occurrences.where(created_at: now.beginning_of_day..now.end_of_day)
+    tracker.update(count: todays_occurrences.count + 1)
   end
 
   # def notify_hooks
