@@ -16,26 +16,36 @@
     </div>
 
     <div class="snitch-errors">
-      <table>
-        <thead>
-          <tr>
-            <th>Error</th>
-            <th style="width: 100px;">Last</th>
-            <th style="width: 1px;">Times</th>
-            <th style="width: 1px;">Assigned</th>
-            <th style="width: 1px;">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>NoMethodError in devices#display_criteria</td>
-            <td>7:04 am -07:00</td>
-            <td>10,384</td>
-            <td>-</td>
-            <td>Unresolved</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="snitch-table">
+        <div class="snitch-thead">
+          <div class="snitch-tr">
+            <div class="snitch-th">Error</div>
+            <div class="snitch-th" style="width: 100px;">Last</div>
+            <div class="snitch-th" style="width: 1px;">Times</div>
+            <div class="snitch-th" style="width: 1px;">Assigned</div>
+            <div class="snitch-th" style="width: 1px;">Status</div>
+          </div>
+        </div>
+        <div class="snitch-tbody">
+          <% @snitch_reports.each do |report| %>
+          <div class="snitch-tr">
+              <%= link_to report, class: "link-cell" do %>
+                <div class="report-title-wrapper">
+                  <span class="report-title"><%= report.error %></span>
+                  <% if report.klass.present? && report.action.present? %>
+                    in <span class="report-location"><%= report.klass %>#<%= report.action %></span>
+                  <% end %>
+                </div>
+                <small class="report-message"><%= truncate(report.message, length: 100) %></small>
+              <% end %>
+              <div class="snitch-td"><%= report.last_occurrence_at %></div>
+              <div class="snitch-td"><%= number_with_delimiter(report.occurrence_count) %></div>
+              <div class="snitch-td"><%= report.assigned_to.try(:name).presence || "-" %></div>
+              <div class="snitch-td">Unresolved</div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

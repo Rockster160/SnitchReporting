@@ -1,6 +1,5 @@
-# text :title
+# text :error
 # text :message
-# string :slug
 # integer :log_level
 # string :klass
 # string :action
@@ -8,6 +7,7 @@
 # datetime :first_occurrence_at
 # datetime :last_occurrence_at
 # bigint :occurrence_count
+# belongs_to :assigned_to
 # datetime :resolved_at
 # belongs_to :resolved_by
 # datetime :ignored_at
@@ -17,6 +17,11 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   attr_accessor :acting_user
   has_many :occurrences, class_name: "SnitchReporting::SnitchOccurrence", foreign_key: :report_id
   has_many :trackers, class_name: "SnitchReporting::SnitchTracker", foreign_key: :report_id
+
+  # belongs_to :assigned_to
+  def assigned_to; end
+  # belongs_to :resolved_by
+  # belongs_to :ignored_by
 
   scope :resolved,      -> { where.not(resolved_at: nil) }
   scope :unresolved,    -> { where(resolved_at: nil) }

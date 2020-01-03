@@ -12,6 +12,7 @@ class InstallSnitchReporting < ActiveRecord::Migration[5.2]
       t.datetime :last_occurrence_at
       t.bigint :occurrence_count
 
+      t.belongs_to :assigned_to
       t.datetime :resolved_at
       t.belongs_to :resolved_by
       t.datetime :ignored_at

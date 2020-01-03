@@ -1,5 +1,6 @@
 .snitch-reporting {
-  table {
+  .snitch-table {
+    display: table;
     border-spacing: 0 0;
     width: 100%;
 
@@ -7,28 +8,58 @@
       width: 100%;
     }
 
-    td, th {
+    .snitch-thead { display: table-header-group; }
+    .snitch-tbody { display: table-row-group; }
+    .snitch-tr { display: table-row; }
+
+    .snitch-td, .snitch-th, .link-cell {
+      display: table-cell;
       border: 1px solid $border-grey;
 
-      padding: 10px;
+      padding: 20px;
       text-align: left;
 
       &.text-center {
         text-align: center;
       }
     }
+
+    .link-cell {
+      color: $text-color;
+      text-decoration: none;
+
+      &:hover {
+        background: darken($background-grey, 5%);
+      }
+    }
   }
 
   .snitch-errors {
-    tbody tr:nth-child(odd) {
+    .snitch-tbody .snitch-tr:nth-child(odd) {
       background: $background-grey;
+    }
+
+    .report-title-wrapper {
+      margin-bottom: 5px;
+
+      .report-title {
+        color: $snitch-blue;
+      }
+    }
+    .report-location {
+      display: inline-block;
+      color: orange;
+    }
+    .report-message {
+      padding-top: 5px;
+      color: grey;
     }
   }
 
   .snitch-section {
     &#summary {
-      table {
-        td:first-of-type {
+      .snitch-table {
+        .snitch-td:first-of-type {
           background: $background-grey;
           color: #AAA;
           font-size: 12px;
