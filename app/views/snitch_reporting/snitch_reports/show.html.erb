@@ -10,26 +10,31 @@
   </div>
 
   <div class="snitch-title-section">
-    <a href="<%=  %>">&laquo; First</a>
-    <a href="<%=  %>">&lsaquo; Previous</a>
-    <a href="<%=  %>">Next &rsaquo;</a>
-    <a href="<%=  %>">Last &raquo;</a>
-    - 03/28/19 10:13 am - 07:00 (a few seconds ago)
-    <h2>ActionView::Template::Error</h2> in <a href="">products</a>#<a href="">show</a>
-    This error has occurred 18,970 times since 03/18/16 @ 12:14pm -07:00
-    (Unresolved|Resolved)
+    <todo>
+      <a href="<%=  %>">&laquo; First</a>
+      <a href="<%=  %>">&lsaquo; Previous</a>
+      <a href="<%=  %>">Next &rsaquo;</a>
+      <a href="<%=  %>">Last &raquo;</a>
+    </todo>
+    - <%= @occurrence.created_at %> <todo>(a few seconds ago)</todo>
+    <h2><%= @report.error %></h2>
+    <% if @report.klass.present? %>
+      in <%= @report.klass %>#<%= @report.action %>
+    <% end %>
+    This error has occurred <%= number_with_delimiter(@report.occurrence_count) %> <%= "time".pluralize(@report.occurrence_count) %> since <%= @report.first_occurrence_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
+    <todo>(Unresolved|Resolved)</todo>
   </div>
 
   <div id="summary" class="snitch-section">
     <div class="snitch-table">
       <div class="snitch-tr">
         <div class="snitch-td">Error</div>
-        <div class="snitch-td">ActionView::Template::Error: undefined method `name` for nil:NilClass</div>
+        <div class="snitch-td"><%= @report.error %>: <%= @report.message %></div>
       </div>
       <div class="snitch-tr">
         <div class="snitch-td">Backtrace</div>
         <div class="snitch-td">
-          <%=  %>
+          <todo><%= @occurrence.filtered_backtrace.first || @occurrence.backtrace.first %></todo>
           show.html.erb > 5 > app_views_products_show_html_erb
           [PROJECT_ROOT]/app/views/products/show.html.erb:5
         </div>
@@ -37,75 +42,117 @@
       <div class="snitch-tr">
         <div class="snitch-td">URL</div>
         <div class="snitch-td">
-          <%=  %>
-          [GET] http://sample.org/products/1516
+          <% if @occurrence.http_method %>
+            [<%= @occurrence.http_method %>]
+          <% end %>
+          <%= @occurrence.url %>
         </div>
       </div>
       <div class="snitch-tr">
         <div class="snitch-td">User Agent</div>
         <div class="snitch-td">
-          <%=  %>
-          <svg Chrome><svg Apple><svg US> UserAgent
+          <%= @occurrence.user_agent %>
         </div>
       </div>
       <div class="snitch-tr">
         <div class="snitch-td">Timeline</div>
         <div class="snitch-td">
-          X: Date
-          Y: Occurrence Count (Hover for date/count)
-          [Hour|Day|Week|Month]
+          <todo>
+            X: Date
+            Y: Occurrence Count (Hover for date/count)
+            [Hour|Day|Week|Month]
+          </todo>
         </div>
       </div>
       <div class="snitch-tr">
-        <div class="snitch-td">Tags (edit)</div>
-        <div class="snitch-td"><%=  %></div>
+        <div class="snitch-td">Tags <todo>(edit)</todo></div>
+        <div class="snitch-td"><%= @report.tags %></div>
       </div>
     </div>
   </div>
 
   <div class="snitch-skinny-container">
     <div class="btn-row">
-      <a class="snitch-btn danger" href="">Delete</a>
-      <a class="snitch-btn" href="">Ignore</a>
-      <a class="snitch-btn" href="">Assign</a>
-      <a class="snitch-btn" href="">URL</a>
-      <a class="snitch-btn" href="">Search StackOverflow</a>
-      <a class="snitch-btn" href="">Create GH Issue</a>
+      <todo>
+        <a class="snitch-btn danger" href="">Delete</a>
+        <a class="snitch-btn" href="">Ignore</a>
+        <a class="snitch-btn" href="">Assign</a>
+        <a class="snitch-btn" href="">URL</a>
+        <a class="snitch-btn" href="">Search StackOverflow</a>
+        <a class="snitch-btn" href="">Create GH Issue</a>
+      </todo>
     </div>
 
     <div id="comments" class="snitch-section">
       <h2>Comments</h2>
-      Text area - Markdown/editor
-      - list of comments
+      <todo>
+        Text area - Markdown/editor
+        - list of comments
+      </todo>
     </div>
 
     <div id="backtrace" class="snitch-section">
       <h2>Application Backtrace</h2>
+      <% @occurrence.filtered_backtrace.each do |row| %>
+        <% line = file_lines_from_backtrace(row) %>
+        <% file_path, line_number = line.split(":") %>
+
+        <div class="line-trace">
+          <div class="trace-details">
+            <div class="trace-file"><%= file_path.split("/").last %></div>
+            <div class="trace-line"><%= line_number %></div>
+          </div>
+
+          <code><% snippet_for_lines(line).each do |line_num, line_code| %><todo><%= line_num %></todo> <%= line_code %><br><% end %></code>
+        </div>
+      <% end %>
+
       <h2>Full Backtrace</h2>
+      <div class="line-trace">
+        <code><%= @occurrence.backtrace.join("\n") %></code>
+      </div>
     </div>
 
     <div id="context" class="snitch-section">
       <h2>Context</h2>
-      Stores information about user and other added information in a before_action for the aplp controller to provide context, which is any hash of info.
+      <div class="line-trace">
+        <code><%= JSON.pretty_generate @occurrence.context %></code>
+      </div>
     </div>
 
     <div id="params" class="snitch-section">
       <h2>Params</h2>
-      (Retain full structure and display)
+      <div class="line-trace">
+        <code><%= JSON.pretty_generate @occurrence.params %></code>
+      </div>
     </div>
 
     <div id="environment" class="snitch-section">
       <h2>Environment</h2>
-      (Headers -- Retain full structure and display -- filter out as normal)
+      <div class="line-trace">
+        <code><%= JSON.pretty_generate @occurrence.headers %></code>
+      </div>
     </div>
 
     <div id="history" class="snitch-section">
       <h2>History</h2>
-      <table>
-        Action (first occurrence, resolved, commented, ignored, etc...)
-        User
-        Timestamp
-      </table>
+      <div class="snitch-table">
+        <div class="snitch-thead">
+          <div class="snitch-tr">
+            <!-- (first occurrence, resolved, commented, ignored, etc...) -->
+            <div class="snitch-th">Action</div>
+            <div class="snitch-th">User</div>
+            <div class="snitch-th">Timestamp</div>
+          </div>
+        </div>
+        <div class="snitch-tbody">
+          <% @report.histories.each do |history| %>
+            <div class="snitch-td"><%= history.text %></div>
+            <div class="snitch-td"><%= history.user %></div>
+            <div class="snitch-td"><%= history.created_at %></div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

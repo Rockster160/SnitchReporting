@@ -17,6 +17,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   attr_accessor :acting_user
   has_many :occurrences, class_name: "SnitchReporting::SnitchOccurrence", foreign_key: :report_id
   has_many :trackers, class_name: "SnitchReporting::SnitchTracker", foreign_key: :report_id
+  has_many :histories, class_name: "SnitchReporting::SnitchHistory", foreign_key: :report_id
 
   # belongs_to :assigned_to
   def assigned_to; end
@@ -71,8 +72,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       occurrence
     rescue StandardError => ex
       env ||= {}
-      binding.pry
-      # SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
+      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
     end
 
     def format_args(args)

@@ -50,10 +50,14 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   # def from_data=(details_hash)
   #   self.details = flatten_hash(details_hash)
   # end
-  #
-  # def filtered_backtrace
-  #   @filtered_backtrace ||= backtrace.select { |row| row.include?("/app/") && row.exclude?("app/models/snitch_reporting") }.presence || []
-  # end
+
+  def backtrace
+    super.map { |row| row.gsub(Rails.root.to_s, "[PROJECT_ROOT]") }
+  end
+
+  def filtered_backtrace
+    @filtered_backtrace ||= backtrace.select { |row| row.include?("/app/") && row.exclude?("app/models/snitch_reporting") }.presence || []
+  end
   #
   # def title
   #   super.presence || "#{report.title} | Occurrence ##{id}"

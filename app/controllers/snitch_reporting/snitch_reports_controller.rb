@@ -2,6 +2,7 @@ require_dependency "snitch_reporting/application_controller"
 
 class ::SnitchReporting::SnitchReportsController < ApplicationController
   include ::SnitchReporting::ParamsHelper
+  helper ::SnitchReporting::SnitchReportHelper
 
   layout "application"
 
@@ -12,12 +13,14 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
       # filter_reports
       # sort_reports
     end
-  #
-  #   def show
+
+    def show
+      @report = ::SnitchReporting::SnitchReport.find(params[:id])
+      @occurrence = @report.occurrences.last
   #     # @occurrences = @snitch_report.occurrences.order(created_at: :desc).page(params[:page]).per(params[:per])
   #     # @formatted_occurrence_data = @occurrences.staggered_occurrence_data
   #     # @comments = @snitch_report.comments.order(created_at: :desc)
-  #   end
+    end
   #
   #   def update
   #     update_report_for(:resolved)

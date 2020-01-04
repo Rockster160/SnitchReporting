@@ -1,0 +1,12 @@
+todo { animation: 1.5s todo-pulse infinite; }
+@keyframes todo-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); background: red; }
+  100% { transform: scale(1); }
+}
+
+.line-trace {
+  width: 100%;
+  overflow: scroll;
+}
+code { white-space: pre; }
