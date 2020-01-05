@@ -1,12 +1,28 @@
 todo { animation: 1.5s todo-pulse infinite; }
 @keyframes todo-pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.01); background: red; }
+  50% { transform: scale(1.01); background: orange; }
   100% { transform: scale(1); }
 }
 
 .line-trace {
-  width: 100%;
+  margin: 20px 0;
+  background: #E0DFDF;
+  padding: 10px;
   overflow: scroll;
+
+  .trace-details {
+    margin: 10px;
+
+    .trace-full {
+      color: grey;
+      font-size: 12px;
+    }
+  }
+
+  .current-line {
+    background: lighten($snitch-blue, 25%);
+  }
 }
+
 code { white-space: pre; }

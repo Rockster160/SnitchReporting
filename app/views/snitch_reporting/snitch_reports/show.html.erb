@@ -71,87 +71,89 @@
     </div>
   </div>
 
-  <div class="snitch-skinny-container">
-    <div class="btn-row">
-      <todo>
-        <a class="snitch-btn danger" href="">Delete</a>
-        <a class="snitch-btn" href="">Ignore</a>
-        <a class="snitch-btn" href="">Assign</a>
-        <a class="snitch-btn" href="">URL</a>
-        <a class="snitch-btn" href="">Search StackOverflow</a>
-        <a class="snitch-btn" href="">Create GH Issue</a>
-      </todo>
-    </div>
+  <div class="btn-row">
+    <todo>
+      <a class="snitch-btn danger" href="">Delete</a>
+      <a class="snitch-btn" href="">Ignore</a>
+      <a class="snitch-btn" href="">Assign</a>
+      <a class="snitch-btn" href="">URL</a>
+      <a class="snitch-btn" href="">Search StackOverflow</a>
+      <a class="snitch-btn" href="">Create GH Issue</a>
+    </todo>
+  </div>
 
-    <div id="comments" class="snitch-section">
-      <h2>Comments</h2>
-      <todo>
-        Text area - Markdown/editor
-        - list of comments
-      </todo>
-    </div>
+  <div id="comments" class="snitch-section">
+    <h3>Comments</h3>
+    <todo>
+      Text area - Markdown/editor
+      - list of comments
+    </todo>
+  </div>
 
-    <div id="backtrace" class="snitch-section">
-      <h2>Application Backtrace</h2>
-      <% @occurrence.filtered_backtrace.each do |row| %>
-        <% line = file_lines_from_backtrace(row) %>
-        <% file_path, line_number = line.split(":") %>
+  <div id="backtrace" class="snitch-section">
+    <h3>Application Backtrace</h3>
+    <% @occurrence.filtered_backtrace.each do |row| %>
+      <% line = file_lines_from_backtrace(row) %>
+      <% file_path, line_number = line.split(":") %>
 
-        <div class="line-trace">
-          <div class="trace-details">
-            <div class="trace-file"><%= file_path.split("/").last %></div>
-            <div class="trace-line"><%= line_number %></div>
-          </div>
-
-          <code><% snippet_for_lines(line).each do |line_num, line_code| %><todo><%= line_num %></todo> <%= line_code %><br><% end %></code>
+      <div class="line-trace">
+        <div class="trace-details">
+          <span class="trace-file"><%= file_path.split("/").last(2).join("/") %></span>
+          <span>&rarr;</span>
+          <span class="trace-line"><%= line_number %></span>
+          <div class="trace-full"><%= line %></div>
         </div>
-      <% end %>
 
-      <h2>Full Backtrace</h2>
-      <div class="line-trace">
-        <code><%= @occurrence.backtrace.join("\n") %></code>
+        <code><% snippet_for_lines(line).each do |line_num, line_code, current| %><span class="<%= 'current-line' if current %>"><%= line_num %> <%= line_code %></span><br><% end %></code>
       </div>
-    </div>
+    <% end %>
+  </div>
 
-    <div id="context" class="snitch-section">
-      <h2>Context</h2>
-      <div class="line-trace">
-        <code><%= JSON.pretty_generate @occurrence.context %></code>
-      </div>
+  <div id="backtrace" class="snitch-section">
+    <h3>Full Backtrace</h3>
+    <div class="line-trace">
+      <code><%= @occurrence.backtrace.join("\n") %></code>
     </div>
+  </div>
 
-    <div id="params" class="snitch-section">
-      <h2>Params</h2>
-      <div class="line-trace">
-        <code><%= JSON.pretty_generate @occurrence.params %></code>
-      </div>
+  <div id="context" class="snitch-section">
+    <h3>Context</h3>
+    <div class="line-trace">
+      <code><%= JSON.pretty_generate @occurrence.context %></code>
     </div>
+  </div>
 
-    <div id="environment" class="snitch-section">
-      <h2>Environment</h2>
-      <div class="line-trace">
-        <code><%= JSON.pretty_generate @occurrence.headers %></code>
-      </div>
+  <div id="params" class="snitch-section">
+    <h3>Params</h3>
+    <div class="line-trace">
+      <code><%= JSON.pretty_generate @occurrence.params %></code>
     </div>
+  </div>
 
-    <div id="history" class="snitch-section">
-      <h2>History</h2>
-      <div class="snitch-table">
-        <div class="snitch-thead">
-          <div class="snitch-tr">
-            <!-- (first occurrence, resolved, commented, ignored, etc...) -->
-            <div class="snitch-th">Action</div>
-            <div class="snitch-th">User</div>
-            <div class="snitch-th">Timestamp</div>
-          </div>
+  <div id="environment" class="snitch-section">
+    <h3>Environment</h3>
+    <div class="line-trace">
+      <code><%= JSON.pretty_generate @occurrence.headers %></code>
+    </div>
+  </div>
+
+  <div id="history" class="snitch-section">
+    <h3>History</h3>
+    <div class="snitch-table">
+      <div class="snitch-thead">
+        <div class="snitch-tr">
+          <!-- (first occurrence, resolved, commented, ignored, etc...) -->
+          <div class="snitch-th">Action</div>
+          <div class="snitch-th">User</div>
+          <div class="snitch-th">Timestamp</div>
         </div>
-        <div class="snitch-tbody">
-          <% @report.histories.each do |history| %>
-            <div class="snitch-td"><%= history.text %></div>
-            <div class="snitch-td"><%= history.user %></div>
-            <div class="snitch-td"><%= history.created_at %></div>
-          <% end %>
-        </div>
+      </div>
+      <div class="snitch-tbody">
+        <% @report.histories.each do |history| %>
+          <div class="snitch-td"><%= history.text %></div>
+          <div class="snitch-td"><%= history.user %></div>
+          <div class="snitch-td"><%= history.created_at %></div>
+        <% end %>
       </div>
     </div>
   </div>

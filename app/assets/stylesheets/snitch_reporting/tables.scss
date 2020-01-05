@@ -2,11 +2,9 @@
   .snitch-table {
     display: table;
     border-spacing: 0 0;
+    background: white;
     width: 100%;
-
-    .main-section {
-      width: 100%;
-    }
+    max-width: 100%;
 
     .snitch-thead { display: table-header-group; }
     .snitch-tbody { display: table-row-group; }
@@ -17,6 +15,8 @@
       border: 1px solid $border-grey;
 
       padding: 20px;
+      max-width: 100%;
+      overflow: scroll;
       text-align: left;
 
       &.text-center {

@@ -5,14 +5,14 @@ module ::SnitchReporting::SnitchReportHelper
 
   def snippet_for_lines(backtrace_line, line_count: 5)
     file, num = backtrace_line.split(":")
-    first_line = num.to_i - 1
-    offset_lines = (line_count - 1) / 2
-    line_numbers = (first_line - offset_lines)..(first_line + offset_lines)
+    first_line_number = num.to_i
+    offset_line_numbers = (line_count - 1) / 2
+    line_numbers = (first_line_number - offset_line_numbers - 1)..(first_line_number + offset_line_numbers - 1)
 
-    lines = File.open(file).read.split("\n")[line_numbers]
+    lines = File.open(file).read.split("\n").map.with_index { |line, idx| [line, idx + 1] }[line_numbers]
 
-    whitespace_count = lines.map { |line| line[/\s*/].length }.min
+    whitespace_count = lines.map { |line, _idx| line[/\s*/].length }.min
 
-    lines.map.with_index { |line, idx| [idx + line_numbers.first, line[whitespace_count..-1]] }
+    lines.map { |line, idx| [idx, line[whitespace_count..-1], idx == first_line_number] }
   end
 end
