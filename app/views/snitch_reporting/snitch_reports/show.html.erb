@@ -9,20 +9,32 @@
     <a href="#history">History</a>
   </div>
 
+  <% if @report.resolved? %>
+    <div class="snitch-banner">
+      <% if @report.ignored? %>
+        <div>Report is ignored- you will not be notified for future occurrences of this Snitch.</div>
+      <% end %>
+      Resolved as of <%= @report.resolved_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
+      <% unless @report.ignored? %>
+        - if this report occurrs again, we will notify you.
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="snitch-title-section">
-    <todo>
+    <!-- <todo>
       <a href="<%=  %>">&laquo; First</a>
       <a href="<%=  %>">&lsaquo; Previous</a>
       <a href="<%=  %>">Next &rsaquo;</a>
       <a href="<%=  %>">Last &raquo;</a>
-    </todo>
-    - <%= @occurrence.created_at %> <todo>(a few seconds ago)</todo>
+      -
+    </todo> -->
+    <!-- <todo>(a few seconds ago)</todo> -->
     <h2><%= @report.error %></h2>
     <% if @report.klass.present? %>
       in <%= @report.klass %>#<%= @report.action %>
     <% end %>
     This error has occurred <%= number_with_delimiter(@report.occurrence_count) %> <%= "time".pluralize(@report.occurrence_count) %> since <%= @report.first_occurrence_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
-    <todo>(Unresolved|Resolved)</todo>
   </div>
 
   <div id="summary" class="snitch-section">
@@ -32,11 +44,13 @@
         <div class="snitch-td"><%= @report.error %>: <%= @report.message %></div>
       </div>
       <div class="snitch-tr">
+        <div class="snitch-td">Occurred</div>
+        <div class="snitch-td"><%= @occurrence.created_at %></div>
+      </div>
+      <div class="snitch-tr">
         <div class="snitch-td">Backtrace</div>
         <div class="snitch-td">
-          <todo><%= @occurrence.filtered_backtrace.first || @occurrence.backtrace.first %></todo>
-          show.html.erb > 5 > app_views_products_show_html_erb
-          [PROJECT_ROOT]/app/views/products/show.html.erb:5
+          <%= (@occurrence.filtered_backtrace.first || @occurrence.backtrace.first).split(":in").first %>
         </div>
       </div>
       <div class="snitch-tr">
@@ -54,7 +68,7 @@
           <%= @occurrence.user_agent %>
         </div>
       </div>
-      <div class="snitch-tr">
+      <!-- <div class="snitch-tr">
         <div class="snitch-td">Timeline</div>
         <div class="snitch-td">
           <todo>
@@ -63,32 +77,39 @@
             [Hour|Day|Week|Month]
           </todo>
         </div>
-      </div>
-      <div class="snitch-tr">
+      </div> -->
+      <!-- <div class="snitch-tr">
         <div class="snitch-td">Tags <todo>(edit)</todo></div>
         <div class="snitch-td"><%= @report.tags %></div>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <div class="btn-row">
-    <todo>
-      <a class="snitch-btn danger" href="">Delete</a>
-      <a class="snitch-btn" href="">Ignore</a>
-      <a class="snitch-btn" href="">Assign</a>
-      <a class="snitch-btn" href="">URL</a>
-      <a class="snitch-btn" href="">Search StackOverflow</a>
-      <a class="snitch-btn" href="">Create GH Issue</a>
-    </todo>
+    <!-- <a class="snitch-btn danger" href="">Delete</a> -->
+    <% if @report.ignored? %>
+      <%= link_to "Mark as Unignored", snitch_report_path(@report, snitch_report: { ignored: false }), method: :patch, class: "snitch-btn" %>
+    <% else %>
+      <%= link_to "Mark as Ignored", snitch_report_path(@report, snitch_report: { ignored: true }), method: :patch, class: "snitch-btn" %>
+    <% end %>
+    <% if @report.resolved? %>
+      <%= link_to "Mark as Unresolved", snitch_report_path(@report, snitch_report: { resolved: false }), method: :patch, class: "snitch-btn" %>
+    <% else %>
+      <%= link_to "Mark as Resolved", snitch_report_path(@report, snitch_report: { resolved: true }), method: :patch, class: "snitch-btn" %>
+    <% end %>
+    <!-- <a class="snitch-btn" href="">Assign</a> -->
+    <!-- <a class="snitch-btn" href="">URL</a> -->
+    <!-- <a class="snitch-btn" href="">Search StackOverflow</a> -->
+    <!-- <a class="snitch-btn" href="">Create GH Issue</a> -->
   </div>
 
-  <div id="comments" class="snitch-section">
+  <!-- <div id="comments" class="snitch-section">
     <h3>Comments</h3>
     <todo>
       Text area - Markdown/editor
       - list of comments
     </todo>
-  </div>
+  </div> -->
 
   <div id="backtrace" class="snitch-section">
     <h3>Application Backtrace</h3>
@@ -111,7 +132,7 @@
 
   <div id="backtrace" class="snitch-section">
     <h3>Full Backtrace</h3>
-    <div class="line-trace">
+    <div class="line-trace cap-height">
       <code><%= @occurrence.backtrace.join("\n") %></code>
     </div>
   </div>
@@ -137,12 +158,11 @@
     </div>
   </div>
 
-  <div id="history" class="snitch-section">
+  <!-- <div id="history" class="snitch-section">
     <h3>History</h3>
     <div class="snitch-table">
       <div class="snitch-thead">
         <div class="snitch-tr">
-          <!-- (first occurrence, resolved, commented, ignored, etc...) -->
           <div class="snitch-th">Action</div>
           <div class="snitch-th">User</div>
           <div class="snitch-th">Timestamp</div>
@@ -156,5 +176,5 @@
         <% end %>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

@@ -262,9 +262,29 @@ class SnitchReporting::SnitchReport < ApplicationRecord
     trackers.tracker_for_date(date)
   end
 
-  # def resolved?; resolved_at?; end
-  # def ignored?; ignored_at?; end
-  #
+  def resolved?; resolved_at?; end
+  def ignored?; ignored_at?; end
+
+  def ignored=(bool)
+    if bool.to_s.downcase.in?(["t", "true", "1", "y", "yes"])
+      self.ignored_at ||= Time.current
+      # self.ignored_by ||= acting_user
+    else
+      self.ignored_at = nil
+      # self.ignored_by = nil
+    end
+  end
+
+  def resolved=(bool)
+    if bool.to_s.downcase.in?(["t", "true", "1", "y", "yes"])
+      self.resolved_at ||= Time.current
+      # self.resolved_by ||= acting_user
+    else
+      self.resolved_at = nil
+      # self.resolved_by = nil
+    end
+  end
+
   # def title
   #   super.presence || slug.presence || "Report ##{id}"
   # end

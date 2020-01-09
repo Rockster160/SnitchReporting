@@ -1,5 +1,5 @@
 <div class="snitch-reporting">
-  <div class="snitch-nav">
+  <!-- <div class="snitch-nav">
     <div class="nav-tab">
       <input type="search" name="search" value="<%= params[:search] %>" placeholder="Search">
     </div>
@@ -7,12 +7,12 @@
     <a href="<%#  %>">Assignee</a>
     <a href="<%#  %>">Occurred</a>
     <a href="<%#  %>">Ignored</a>
-  </div>
+  </div> -->
 
   <div class="snitch-index">
     <div class="snitch-title-section">
       <h1><%= Rails.application.class.parent.name %></h1>
-      Sort
+      <!-- Sort -->
     </div>
 
     <div class="snitch-errors">
@@ -41,7 +41,9 @@
               <div class="snitch-td"><%= report.last_occurrence_at %></div>
               <div class="snitch-td"><%= number_with_delimiter(report.occurrence_count) %></div>
               <div class="snitch-td"><%= report.assigned_to.try(:name).presence || "-" %></div>
-              <div class="snitch-td">Unresolved</div>
+              <div class="snitch-td">
+                <todo>Unresolved</todo>
+              </div>
             </div>
           <% end %>
         </div>

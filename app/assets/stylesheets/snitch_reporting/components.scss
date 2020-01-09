@@ -1,8 +1,28 @@
-todo { animation: 1.5s todo-pulse infinite; }
+todo {
+  animation: 1.5s todo-pulse infinite;
+}
 @keyframes todo-pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.01); background: orange; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.01);
+    background: orange;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.snitch-banner {
+  box-shadow: 2px 2px 4px $border-grey;
+  border-radius: 8px;
+  background: green;
+  padding: 15px;
+  color: white;
+  text-align: center;
 }
 
 .line-trace {
@@ -10,6 +30,10 @@ todo { animation: 1.5s todo-pulse infinite; }
   background: #E0DFDF;
   padding: 10px;
   overflow: scroll;
+
+  &.cap-height {
+    max-height: 300px;
+  }
 
   .trace-details {
     margin: 10px;
@@ -25,4 +49,6 @@ todo { animation: 1.5s todo-pulse infinite; }
   }
 }
 
-code { white-space: pre; }
+code {
+  white-space: pre;
+}
