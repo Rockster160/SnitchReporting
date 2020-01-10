@@ -5,22 +5,38 @@
     background: white;
     width: 100%;
     max-width: 100%;
+    table-layout: fixed;
+    overflow: hidden;
 
-    .snitch-thead { display: table-header-group; }
-    .snitch-tbody { display: table-row-group; }
-    .snitch-tr { display: table-row; }
+    .snitch-thead {
+      display: table-header-group;
+    }
 
-    .snitch-td, .snitch-th, .link-cell {
+    .snitch-tbody {
+      display: table-row-group;
+    }
+
+    .snitch-tr {
+      display: table-row;
+    }
+
+    .link-cell,
+    .snitch-td,
+    .snitch-th {
       display: table-cell;
       border: 1px solid $border-grey;
 
       padding: 20px;
       max-width: 100%;
-      overflow: scroll;
+      overflow: hidden;
       text-align: left;
 
       &.text-center {
         text-align: center;
+      }
+
+      &:first-of-type {
+        width: 100px;
       }
     }
 
@@ -46,10 +62,12 @@
         color: $snitch-blue;
       }
     }
+
     .report-location {
       display: inline-block;
       color: orange;
     }
+
     .report-message {
       padding-top: 5px;
       color: grey;

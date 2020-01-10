@@ -16,6 +16,14 @@ todo {
   }
 }
 
+.scrollable {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
 .snitch-banner {
   box-shadow: 2px 2px 4px $border-grey;
   border-radius: 8px;
@@ -50,5 +58,6 @@ todo {
 }
 
 code {
+  overflow: scroll;
   white-space: pre;
 }

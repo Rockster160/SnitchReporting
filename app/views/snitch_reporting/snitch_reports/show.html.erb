@@ -41,7 +41,12 @@
     <div class="snitch-table">
       <div class="snitch-tr">
         <div class="snitch-td">Error</div>
-        <div class="snitch-td"><%= @report.error %>: <%= @report.message %></div>
+        <div class="snitch-td">
+          <div class="scrollable">
+            <%= @report.error %>: <br>
+            <code><%= @report.message %></code>
+          </div>
+        </div>
       </div>
       <div class="snitch-tr">
         <div class="snitch-td">Occurred</div>
