@@ -23,5 +23,14 @@
         background: linear-gradient(darken($danger, 15%), $danger, $danger);
       }
     }
+
+    &.primary {
+      background: linear-gradient($snitch-blue, darken($snitch-blue, 15%));
+      color: white;
+
+      &:hover {
+        background: linear-gradient(darken($snitch-blue, 15%), $snitch-blue, $snitch-blue);
+      }
+    }
   }
 }

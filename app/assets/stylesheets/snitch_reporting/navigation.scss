@@ -1,13 +1,15 @@
 .snitch-reporting {
   .snitch-nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
+    z-index: 1000;
     background: $snitch-blue;
     height: 50px;
 
-    a, .nav-tab {
+    .nav-tab,
+    a {
       display: inline-block;
       vertical-align: top;
       margin: 0;
@@ -30,4 +32,6 @@
       background: lighten($snitch-blue, 10%);
     }
   }
+
+  .snitch-breadcrumbs {}
 }

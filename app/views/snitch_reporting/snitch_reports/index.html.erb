@@ -28,7 +28,7 @@
         </div>
         <div class="snitch-tbody">
           <% @reports.each do |report| %>
-          <div class="snitch-tr">
+            <div class="snitch-tr">
               <%= link_to report, class: "link-cell" do %>
                 <div class="report-title-wrapper">
                   <span class="report-title"><%= report.error %></span>

@@ -9,6 +9,13 @@
     <a href="#history">History</a>
   </div>
 
+  <div class="snitch-breadcrumbs">
+    <%= link_to snitch_reports_path, class: "snitch-btn primary" do %>
+      &larr;
+      <%= Rails.application.class.parent.name %>
+    <% end %>
+  </div>
+
   <% if @report.resolved? %>
     <div class="snitch-banner">
       <% if @report.ignored? %>
