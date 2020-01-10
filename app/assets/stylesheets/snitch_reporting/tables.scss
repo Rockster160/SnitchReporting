@@ -5,8 +5,11 @@
     background: white;
     width: 100%;
     max-width: 100%;
-    table-layout: fixed;
     overflow: hidden;
+
+    &.fixed {
+      table-layout: fixed;
+    }
 
     .snitch-thead {
       display: table-header-group;
@@ -20,23 +23,17 @@
       display: table-row;
     }
 
-    .link-cell,
     .snitch-td,
     .snitch-th {
       display: table-cell;
       border: 1px solid $border-grey;
 
-      padding: 20px;
       max-width: 100%;
       overflow: hidden;
       text-align: left;
 
       &.text-center {
         text-align: center;
-      }
-
-      &:first-of-type {
-        width: 100px;
       }
     }
 
@@ -48,13 +45,23 @@
         background: darken($background-grey, 5%);
       }
     }
+
+    &.bordered {
+      .snitch-tbody .snitch-tr:nth-child(odd) {
+        background: $background-grey;
+      }
+    }
+
+    &.padded {
+      .link-cell,
+      .snitch-td,
+      .snitch-th {
+        padding: 20px;
+      }
+    }
   }
 
   .snitch-errors {
-    .snitch-tbody .snitch-tr:nth-child(odd) {
-      background: $background-grey;
-    }
-
     .report-title-wrapper {
       margin-bottom: 5px;
 
@@ -79,10 +86,33 @@
       .snitch-table {
         .snitch-td:first-of-type {
           background: $background-grey;
+          width: 100px;
           color: #AAA;
           font-size: 12px;
           text-align: right;
         }
+      }
+    }
+  }
+
+  .filter-table {
+    width: 300px;
+
+    .link-cell,
+    .snitch-td,
+    .snitch-th {
+      padding: 10px;
+    }
+
+    .snitch-th {
+      text-align: center;
+    }
+
+    .snitch-td {
+      font-size: 14px;
+
+      &.selected {
+        background: darken($background-grey, 10%);
       }
     }
   }

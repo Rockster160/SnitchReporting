@@ -10,7 +10,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
       @reports = ::SnitchReporting::SnitchReport.order("last_occurrence_at DESC NULLS LAST")
 
       # set_report_preferences
-      # filter_reports
+      filter_reports
       # sort_reports
     end
 
@@ -99,17 +99,27 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   #       preferences
   #     end
   #   end
-  #
-  #   def filter_reports
-  #     @reports = @reports.search(@report_preferences[:by_fuzzy_text]) if @report_preferences[:by_fuzzy_text].present?
-  #
-  #     @reports = @reports.by_level(@report_preferences[:level_tags]) if @report_preferences[:level_tags].present?
-  #     @reports = @reports.by_severity(@report_preferences[:severity_tags]) if @report_preferences[:severity_tags].present?
-  #     @reports = @reports.by_source(@report_preferences[:source_tags]) if @report_preferences[:source_tags].present?
-  #
-  #     @reports = @report_preferences[:resolved].present? && truthy?(@report_preferences[:resolved]) ? @reports.resolved : @reports.unresolved
-  #     @reports = @report_preferences[:ignored].present? && truthy?(@report_preferences[:ignored]) ? @reports.ignored : @reports.unignored
-  #   end
+    def set_filters
+      @filters = {}
+      @filters[:status] = :unresolved
+      @filters[:status] = :resolved if params[:status].to_s == "resolved"
+      @filters[:status] = :all if params[:status].to_s == "all"
+    end
+
+    def filter_reports
+      set_filters
+
+      @reports = @reports.resolved if @filters[:status] == :resolved
+      @reports = @reports.unresolved if @filters[:status] == :unresolved
+      # @reports = @reports.search(@report_preferences[:by_fuzzy_text]) if @report_preferences[:by_fuzzy_text].present?
+      #
+      # @reports = @reports.by_level(@report_preferences[:level_tags]) if @report_preferences[:level_tags].present?
+      # @reports = @reports.by_severity(@report_preferences[:severity_tags]) if @report_preferences[:severity_tags].present?
+      # @reports = @reports.by_source(@report_preferences[:source_tags]) if @report_preferences[:source_tags].present?
+      #
+      # @reports = @report_preferences[:resolved].present? && truthy?(@report_preferences[:resolved]) ? @reports.resolved : @reports.unresolved
+      # @reports = @report_preferences[:ignored].present? && truthy?(@report_preferences[:ignored]) ? @reports.ignored : @reports.unignored
+    end
   #
   #   def sort_reports
   #     order = sort_order || "desc"

@@ -8,6 +8,20 @@
     <a href="<%#  %>">Occurred</a>
     <a href="<%#  %>">Ignored</a>
   </div> -->
+  <div class="snitch-table filter-table">
+    <div class="snitch-tr">
+      <div class="snitch-th">Status</div>
+    </div>
+    <div class="snitch-tr">
+      <%= link_to "All", @filters.merge({ status: :all }), class: "snitch-td link-cell #{'selected' if @filters[:status] == :all}" %>
+    </div>
+    <div class="snitch-tr">
+      <%= link_to "Resolved", @filters.merge({ status: :resolved }), class: "snitch-td link-cell #{'selected' if @filters[:status] == :resolved}" %>
+    </div>
+    <div class="snitch-tr">
+      <%= link_to "Unresolved", @filters.except(:status), class: "snitch-td link-cell #{'selected' if @filters[:status] == :unresolved}" %>
+    </div>
+  </div>
 
   <div class="snitch-index">
     <div class="snitch-title-section">
@@ -16,11 +30,11 @@
     </div>
 
     <div class="snitch-errors">
-      <div class="snitch-table">
+      <div class="snitch-table bordered padded">
         <div class="snitch-thead">
           <div class="snitch-tr">
             <div class="snitch-th">Error</div>
-            <div class="snitch-th" style="width: 100px;">Last</div>
+            <div class="snitch-th" style="width: 150px;">Last</div>
             <div class="snitch-th" style="width: 1px;">Times</div>
             <div class="snitch-th" style="width: 1px;">Assigned</div>
             <div class="snitch-th" style="width: 1px;">Status</div>
@@ -29,7 +43,7 @@
         <div class="snitch-tbody">
           <% @reports.each do |report| %>
             <div class="snitch-tr">
-              <%= link_to report, class: "link-cell" do %>
+              <%= link_to report, class: "snitch-td link-cell" do %>
                 <div class="report-title-wrapper">
                   <span class="report-title"><%= report.error %></span>
                   <% if report.klass.present? && report.action.present? %>

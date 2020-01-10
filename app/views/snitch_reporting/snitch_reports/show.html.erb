@@ -16,15 +16,9 @@
     <% end %>
   </div>
 
-  <% if @report.resolved? %>
+  <% if @report.ignored? %>
     <div class="snitch-banner">
-      <% if @report.ignored? %>
-        <div>Report is ignored- you will not be notified for future occurrences of this Snitch.</div>
-      <% end %>
-      Resolved as of <%= @report.resolved_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
-      <% unless @report.ignored? %>
-        - if this report occurrs again, we will notify you.
-      <% end %>
+      <div>Report is ignored- you will not be notified for future occurrences of this Snitch.</div>
     </div>
   <% end %>
 
@@ -37,15 +31,22 @@
       -
     </todo> -->
     <!-- <todo>(a few seconds ago)</todo> -->
-    <h2><%= @report.error %></h2>
-    <% if @report.klass.present? %>
-      in <%= @report.klass %>#<%= @report.action %>
-    <% end %>
-    This error has occurred <%= number_with_delimiter(@report.occurrence_count) %> <%= "time".pluralize(@report.occurrence_count) %> since <%= @report.first_occurrence_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
+    <div class="flex-row">
+      <div class="flex-cell">
+        <h2><%= @report.error %></h2>
+        <% if @report.klass.present? %>
+          in <%= @report.klass %>#<%= @report.action %>
+        <% end %>
+        This error has occurred <%= number_with_delimiter(@report.occurrence_count) %> <%= "time".pluralize(@report.occurrence_count) %> since <%= @report.first_occurrence_at.strftime("%m/%d/%Y @ %I:%M%P %:z") %>
+      </div>
+      <div class="flex-cell">
+        <%= content_tag :input, "", type: :checkbox, name: :resolved, class: "snitch-resolution-switch", checked: @report.resolved?, data: { mark_resolution_url: snitch_report_url(@report) } %>
+      </div>
+    </div>
   </div>
 
   <div id="summary" class="snitch-section">
-    <div class="snitch-table">
+    <div class="snitch-table padded">
       <div class="snitch-tr">
         <div class="snitch-td">Error</div>
         <div class="snitch-td">
@@ -103,11 +104,6 @@
       <%= link_to "Mark as Unignored", snitch_report_path(@report, snitch_report: { ignored: false }), method: :patch, class: "snitch-btn" %>
     <% else %>
       <%= link_to "Mark as Ignored", snitch_report_path(@report, snitch_report: { ignored: true }), method: :patch, class: "snitch-btn" %>
-    <% end %>
-    <% if @report.resolved? %>
-      <%= link_to "Mark as Unresolved", snitch_report_path(@report, snitch_report: { resolved: false }), method: :patch, class: "snitch-btn" %>
-    <% else %>
-      <%= link_to "Mark as Resolved", snitch_report_path(@report, snitch_report: { resolved: true }), method: :patch, class: "snitch-btn" %>
     <% end %>
     <!-- <a class="snitch-btn" href="">Assign</a> -->
     <!-- <a class="snitch-btn" href="">URL</a> -->
