@@ -1,3 +1,24 @@
+document.addEventListener("change", function(evt) {
+  if (evt.target && evt.target.hasAttribute("data-mark-resolution-url")) {
+    var report_url = evt.target.getAttribute("data-mark-resolution-url")
+    var data = JSON.stringify({
+      snitch_report: {
+        resolved: evt.target.checked
+      }
+    })
+
+    fetch(report_url, {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+      },
+      method: "PATCH",
+      body: data
+    })
+  }
+})
+
 // Must include Jquery
 // Or rewrite to use pure JS
 // $(document).ready(function() {

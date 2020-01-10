@@ -61,3 +61,49 @@ code {
   overflow: scroll;
   white-space: pre;
 }
+
+.snitch-resolution-switch {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  transition: background-color ease 0.3s;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: #707070;
+  width: 120px;
+  height: 32px;
+  overflow: hidden;
+
+  &:before {
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    z-index: 2;
+    transition: 0.4s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    background: #fff;
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    font: 10px/28px Helvetica;
+    font-weight: bold;
+    text-indent: -70px;
+    text-shadow: -1px -1px rgba(0,0,0,0.15);
+    text-transform: uppercase;
+    white-space: nowrap;
+    word-spacing: 52px;
+    content: "Resolved Unresolved";
+  }
+
+  &:checked {
+    background-color: #4CD964;
+  }
+
+  &:checked:before {
+    left: 90px;
+  }
+}
