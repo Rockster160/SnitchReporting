@@ -8,25 +8,33 @@
     <a href="<%#  %>">Occurred</a>
     <a href="<%#  %>">Ignored</a>
   </div> -->
-  <div class="snitch-table filter-table">
-    <div class="snitch-tr">
-      <div class="snitch-th">Status</div>
-    </div>
-    <div class="snitch-tr">
-      <%= link_to "All", @filters.merge({ status: :all }), class: "snitch-td link-cell #{'selected' if @filters[:status] == :all}" %>
-    </div>
-    <div class="snitch-tr">
-      <%= link_to "Resolved", @filters.merge({ status: :resolved }), class: "snitch-td link-cell #{'selected' if @filters[:status] == :resolved}" %>
-    </div>
-    <div class="snitch-tr">
-      <%= link_to "Unresolved", @filters.except(:status), class: "snitch-td link-cell #{'selected' if @filters[:status] == :unresolved}" %>
-    </div>
+  <div class="filters">
+    <% @filter_sets.each do |filter_name, filter_set| %>
+      <div class="snitch-table filter-table">
+        <div class="snitch-tr">
+          <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
+        </div>
+
+        <% selected_filter_value = @filters[filter_name] %>
+        <% default_filter_value = filter_set[:default] %>
+        <% filter_set[:values].each do |filter_value| %>
+          <div class="snitch-tr">
+            <% url_value = filter_value == default_filter_value ? @filters[:set_filters].except(filter_name) : @filters[:set_filters].merge(filter_name => filter_value) %>
+            <%= link_to filter_value.to_s.titleize, url_value, class: "snitch-td link-cell #{'selected' if selected_filter_value == filter_value}" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
   <div class="snitch-index">
     <div class="snitch-title-section">
       <h1><%= Rails.application.class.parent.name %></h1>
       <!-- Sort -->
+    </div>
+    <div class="snitch-center">
+      <%= paginate @reports %>
+      <br>
     </div>
 
     <div class="snitch-errors">

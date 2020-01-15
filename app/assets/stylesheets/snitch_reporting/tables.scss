@@ -95,25 +95,33 @@
     }
   }
 
-  .filter-table {
-    width: 300px;
+  .filters {
+    text-align: center;
 
-    .link-cell,
-    .snitch-td,
-    .snitch-th {
-      padding: 10px;
-    }
+    .filter-table {
+      display: inline-block;
+      vertical-align: top;
+      width: 300px;
 
-    .snitch-th {
-      text-align: center;
-    }
+      .link-cell,
+      .snitch-td,
+      .snitch-th {
+        padding: 10px;
+        width: 300px;
+      }
 
-    .snitch-td {
-      font-size: 14px;
+      .snitch-th {
+        text-align: center;
+      }
 
-      &.selected {
-        background: darken($background-grey, 10%);
+      .snitch-td {
+        font-size: 14px;
+
+        &.selected {
+          background: darken($background-grey, 10%);
+        }
       }
     }
   }
+
 }

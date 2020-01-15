@@ -7,7 +7,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   layout "application"
 
     def index
-      @reports = ::SnitchReporting::SnitchReport.order("last_occurrence_at DESC NULLS LAST")
+      @reports = ::SnitchReporting::SnitchReport.order("last_occurrence_at DESC NULLS LAST").page(params[:page]).per(params[:per] || 25)
 
       # set_report_preferences
       filter_reports
@@ -100,10 +100,32 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   #     end
   #   end
     def set_filters
-      @filters = {}
-      @filters[:status] = :unresolved
-      @filters[:status] = :resolved if params[:status].to_s == "resolved"
-      @filters[:status] = :all if params[:status].to_s == "all"
+      @filter_sets = {
+        status: {
+          default: :unresolved,
+          values: [:all, :resolved, :unresolved]
+        },
+        # assignee: {
+        #   default: :any,
+        #   values: [:any, :me, :not_me, :not_assigned]
+        # },
+        # log_level: {
+        #   default: :any,
+        #   values: [:any] + ::SnitchReporting::SnitchReport.log_levels.keys.map(&:to_sym)
+        # },
+        # ignored: {
+        #   default: :not_ignored,
+        #   values: [:all, :ignored, :not_ignored]
+        # }
+      }
+
+      @filters = @filter_sets.each_with_object({set_filters: {}}) do |(filter_name, filter_set), filters|
+        filters[filter_name] = filter_set[:default]
+        filter_in_param = params[filter_name].try(:to_sym)
+        next unless filter_in_param && filter_set[:values].include?(filter_in_param)
+        filters[filter_name] = filter_in_param
+        filters[:set_filters][filter_name] = filter_in_param
+      end
     end
 
     def filter_reports
