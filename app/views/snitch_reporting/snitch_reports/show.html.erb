@@ -24,10 +24,10 @@
 
   <div class="snitch-title-section">
     <div class="snitch-center">
-      <%= link_to "« First", snitch_report_path(@paged_ids[:first]) if @paged_ids[:first].present? %>
-      <%= link_to "‹ Previous", snitch_report_path(@paged_ids[:prev]) if @paged_ids[:prev].present? %>
-      <%= link_to "Next ›", snitch_report_path(@paged_ids[:next]) if @paged_ids[:next].present? %>
-      <%= link_to "Last »", snitch_report_path(@paged_ids[:last]) if @paged_ids[:last].present? %>
+      <%= link_to "« First", snitch_report_path(@report, occurrence: @paged_ids[:first]) if @paged_ids[:first].present? %>
+      <%= link_to "‹ Previous", snitch_report_path(@report, occurrence: @paged_ids[:prev]) if @paged_ids[:prev].present? %>
+      <%= link_to "Next ›", snitch_report_path(@report, occurrence: @paged_ids[:next]) if @paged_ids[:next].present? %>
+      <%= link_to "Last »", snitch_report_path(@report, occurrence: @paged_ids[:last]) if @paged_ids[:last].present? %>
     </div>
     <!-- <%= '-' if @paged_ids.present? %>
     <todo>(a few seconds ago)</todo> -->
