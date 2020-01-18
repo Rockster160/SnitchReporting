@@ -17,8 +17,16 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
     def show
       @report = ::SnitchReporting::SnitchReport.find(params[:id])
       occurrences = @report.occurrences.order(created_at: :desc)
-      @occurrence = @occurrences.find_by(id: params[:occurrence]) || @occurrences.first
-      # @formatted_occurrence_data = @occurrences.staggered_occurrence_data
+      @occurrence = occurrences.find_by(id: params[:occurrence]) || occurrences.first
+      occurrence_ids = occurrences.ids
+      occurrence_idx = occurrence_ids.index(@occurrence.id)
+      @paged_ids = {
+        first:   occurrence_idx == 0 ? nil : occurrence_ids.first,
+        prev:    occurrence_idx == 0 ? nil : occurrence_ids[occurrence_idx - 1],
+        next:    occurrence_idx == occurrence_ids.length - 1 ? nil : occurrence_idx[occurrence_idx + 1],
+        last:    occurrence_idx == occurrence_ids.length - 1 ? nil : occurrence_ids.last
+      }
+      # @formatted_occurrence_data = occurrences.staggered_occurrence_data
       # @comments = @report.comments.order(created_at: :desc)
     end
 
