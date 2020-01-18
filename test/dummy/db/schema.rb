@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_01_03_014637) do
     t.string "url"
     t.text "user_agent"
     t.text "backtrace"
+    t.text "backtrace_data"
     t.text "context"
     t.text "params"
     t.text "headers"
@@ -59,12 +60,14 @@ ActiveRecord::Schema.define(version: 2020_01_03_014637) do
     t.datetime "first_occurrence_at"
     t.datetime "last_occurrence_at"
     t.bigint "occurrence_count"
+    t.bigint "assigned_to_id"
     t.datetime "resolved_at"
     t.bigint "resolved_by_id"
     t.datetime "ignored_at"
     t.bigint "ignored_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["assigned_to_id"], name: "index_snitch_reporting_snitch_reports_on_assigned_to_id"
     t.index ["ignored_by_id"], name: "index_snitch_reporting_snitch_reports_on_ignored_by_id"
     t.index ["resolved_by_id"], name: "index_snitch_reporting_snitch_reports_on_resolved_by_id"
   end

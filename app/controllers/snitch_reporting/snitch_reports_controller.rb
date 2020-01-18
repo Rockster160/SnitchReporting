@@ -16,8 +16,8 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
 
     def show
       @report = ::SnitchReporting::SnitchReport.find(params[:id])
-      @occurrence = @report.occurrences.last
-      # @occurrences = @report.occurrences.order(created_at: :desc).page(params[:page]).per(params[:per])
+      occurrences = @report.occurrences.order(created_at: :desc)
+      @occurrence = @occurrences.find_by(id: params[:occurrence]) || @occurrences.first
       # @formatted_occurrence_data = @occurrences.staggered_occurrence_data
       # @comments = @report.comments.order(created_at: :desc)
     end

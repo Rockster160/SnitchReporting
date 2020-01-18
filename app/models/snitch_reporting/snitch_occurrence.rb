@@ -14,10 +14,11 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
 
   after_create :mark_occurrence
 
-  serialize :backtrace, ::SnitchReporting::Service::JSONWrapper
-  serialize :context,   ::SnitchReporting::Service::JSONWrapper
-  serialize :params,    ::SnitchReporting::Service::JSONWrapper
-  serialize :headers,   ::SnitchReporting::Service::JSONWrapper
+  serialize :backtrace_data, ::SnitchReporting::Service::JSONWrapper
+  serialize :backtrace,      ::SnitchReporting::Service::JSONWrapper
+  serialize :context,        ::SnitchReporting::Service::JSONWrapper
+  serialize :params,         ::SnitchReporting::Service::JSONWrapper
+  serialize :headers,        ::SnitchReporting::Service::JSONWrapper
 
   # def self.staggered_occurrence_data
   #   data = {}
@@ -51,12 +52,50 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   #   self.details = flatten_hash(details_hash)
   # end
 
-  def backtrace
-    super.map { |row| row.gsub(Rails.root.to_s, "[PROJECT_ROOT]") }
+  def backtrace=(trace_lines)
+    already_traced = []
+    self.backtrace_data = trace_lines.map do |trace_line|
+      next unless trace_line.include?("/app/") # && trace_line.exclude?("app/models/snitch_reporting")
+
+      joined_path = file_lines_from_backtrace(trace_line)
+      next if joined_path.include?(joined_path)
+      already_traced << joined_path
+      
+      file_path, line_number = joined_path.split(":", 2)
+      {
+        file_path: remove_project_root(file_path),
+        line_number: line_number,
+        snippet: snippet_for_line(trace_line)
+      }
+    end.compact
+    super(trace_lines.map { |trace_line| remove_project_root(trace_line) })
   end
 
   def filtered_backtrace
-    @filtered_backtrace ||= backtrace.select { |row| row.include?("/app/") && row.exclude?("app/models/snitch_reporting") }.presence || []
+    backtrace_data&.map { |data| data&.dig(:file_path) }.compact
+  end
+
+  def remove_project_root(row)
+    row.gsub(Rails.root.to_s, "[PROJECT_ROOT]")
+  end
+
+  def file_lines_from_backtrace(backtrace_line)
+    backtrace_line[/(\/?\w+\/?)+(\.\w+)+:?\d*/]
+  end
+
+  def snippet_for_line(backtrace_line, line_count: 5)
+    file, num = backtrace_line.split(":")
+    first_line_number = num.to_i
+    offset_line_numbers = (line_count - 1) / 2
+    line_numbers = (first_line_number - offset_line_numbers - 1)..(first_line_number + offset_line_numbers - 1)
+
+    lines = File.open(file).read.split("\n").map.with_index { |line, idx| [line, idx + 1] }[line_numbers] rescue nil
+
+    whitespace_count = lines.map { |line, _idx| line[/\s*/].length }.min
+
+    lines.each_with_object({}) do |(line, idx), data|
+      data[idx] = line[whitespace_count..-1]
+    end
   end
   #
   # def title

@@ -27,6 +27,7 @@ class InstallSnitchReporting < ActiveRecord::Migration[5.2]
       t.string :url
       t.text :user_agent
       t.text :backtrace
+      t.text :backtrace_data
       t.text :context
       t.text :params
       t.text :headers
