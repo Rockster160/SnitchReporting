@@ -8,7 +8,7 @@
 # text :headers
 
 class SnitchReporting::SnitchOccurrence < ApplicationRecord
-  attr_accessor :always_notify, :acting_user
+  attr_accessor :always_notify, :acting_user, :should_notify
 
   belongs_to :report, class_name: "SnitchReporting::SnitchReport"
 
@@ -119,12 +119,13 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   # end
 
   def notify?
-    always_notify || report.resolved? || report.occurrence_count == 1
+    @should_notify ||= always_notify || report.resolved? || report.occurrence_count == 1
   end
 
   private
 
   def mark_occurrence
+    notify? # Store ivar
     report_updates = { last_occurrence_at: Time.current, resolved_at: nil }
     report_updates[:first_occurrence_at] = Time.current if report.first_occurrence_at.nil?
     report_updates[:occurrence_count] = report.occurrence_count.to_i + 1
