@@ -18,7 +18,5 @@ module Dummy
 end
 
 Rails.application.config.middleware.use SnitchReporting::Rack, ->(occurrence) {
-  Rails.logger.warn "\e[31mStack Trace:\n#{occurrence.filtered_backtrace.join("\n")}\e[0m"
-  puts occurrence.filtered_backtrace.join("\n")
-  binding.pry
+  # Use the `occurrence` and `occurrence.report` to retrieve the info and notify to your reception box of choice, whether it be Email, SMS, Slack, or some other API.
 }
