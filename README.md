@@ -39,10 +39,10 @@ Rails.application.config.middleware.use SnitchReporting::Rack, ->(occurrence) {
 Lots of things to do, and would love some PRs! Feel free to pull the code down and submit a PR with some changes.
 A few things I'd like to do:
 
-[] Track/display how many unique users are affected by the error
-[] Visually graph history of the error
-[] Add commenting capabilities
-[] Track history of changes, whether they be marking as resolved, commenting, etc.
+- [] Track/display how many unique users are affected by the error
+- [] Visually graph history of the error
+- [] Add commenting capabilities
+- [] Track history of changes, whether they be marking as resolved, commenting, etc.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
