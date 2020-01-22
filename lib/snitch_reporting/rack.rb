@@ -1,8 +1,10 @@
 class SnitchReporting::Rack
   class SnitchException < RuntimeError; end
+  attr_accessor :notify_callback
 
-  def initialize(app, opts={})
+  def initialize(app, notify_callback=nil)
     @app = app
+    @notify_callback = notify_callback
   end
 
   def call(env)
@@ -17,7 +19,8 @@ class SnitchReporting::Rack
 
     response
   rescue Exception => exception
-    ::SnitchReporting::SnitchReport.fatal(exception, env: env)
+    occurrence = ::SnitchReporting::SnitchReport.fatal(exception, env: env)
+    notify_callback.call(occurrence) if occurrence.notify?
 
     raise exception unless exception.is_a?(SnitchException)
 

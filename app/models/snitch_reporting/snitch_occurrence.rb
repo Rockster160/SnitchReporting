@@ -60,7 +60,7 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
       joined_path = file_lines_from_backtrace(trace_line)
       next if joined_path.include?(joined_path)
       already_traced << joined_path
-      
+
       file_path, line_number = joined_path.split(":", 2)
       {
         file_path: remove_project_root(file_path),
@@ -118,11 +118,13 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   #   temp_details
   # end
 
+  def notify?
+    always_notify || report.resolved? || report.occurrence_count == 1
+  end
+
   private
 
   def mark_occurrence
-    # notify_hooks if always_notify || report.resolved? || report.occurrences_count == 1
-
     report_updates = { last_occurrence_at: Time.current, resolved_at: nil }
     report_updates[:first_occurrence_at] = Time.current if report.first_occurrence_at.nil?
     report_updates[:occurrence_count] = report.occurrence_count.to_i + 1
@@ -135,10 +137,6 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
     tracker.update(count: todays_occurrences.count + 1)
   end
 
-  # def notify_hooks
-  #   # Notify.slack("*[#{Rails.env.upcase}]* #{title}", report.slack_channel, "Snitch-Bot", ":exclamation:", [to_slack_attachment], true)
-  # end
-  #
   # def to_slack_attachment
   #   details ||= {}
   #   description = details[:description] || details[:error_description] || details[:error] || details[:explanation]

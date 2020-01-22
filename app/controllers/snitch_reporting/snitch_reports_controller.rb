@@ -156,7 +156,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   #     @reports =
   #     case params[:sort]
   #     when "count"
-  #       @reports.order("snitch_reporting_snitch_reports.occurrences_count #{order} NULLS LAST, snitch_reporting_snitch_reports.last_occurrence_at DESC NULLS LAST")
+  #       @reports.order("snitch_reporting_snitch_reports.occurrence_count #{order} NULLS LAST, snitch_reporting_snitch_reports.last_occurrence_at DESC NULLS LAST")
   #     when "last"
   #       @reports.order("snitch_reporting_snitch_reports.last_occurrence_at #{order} NULLS LAST")
   #     else

@@ -17,4 +17,6 @@ module Dummy
   end
 end
 
-Rails.application.config.middleware.use SnitchReporting::Rack
+Rails.application.config.middleware.use SnitchReporting::Rack, ->(occurrence) {
+  Rails.logger.warn "\e[31mStack Trace:\n#{occurrence.filtered_backtrace.join("\n")}\e[0m"
+}
