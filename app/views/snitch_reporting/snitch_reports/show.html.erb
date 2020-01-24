@@ -52,7 +52,7 @@
         <div class="snitch-td">
           <div class="scrollable">
             <%= @report.error %>: <br>
-            <code><%= @report.message %></code>
+            <span class="snitch-code"><%= @report.message %></span>
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@
   <div id="params" class="snitch-section">
     <h3>Params</h3>
     <div class="line-trace">
-      <code><%= JSON.pretty_generate(@occurrence.params) %></code>
+      <span class="snitch-code"><%= JSON.pretty_generate(@occurrence.params) %></span>
     </div>
   </div>
 
@@ -141,7 +141,7 @@
           <div class="trace-full"><%= file_path %></div>
         </div>
 
-        <code><% row_data[:snippet].each do |line_num, line_code| %><span class="<%= 'current-line' if line_num.to_s.to_i == line_number %>"><%= line_num %> <%= line_code %></span><br><% end %></code>
+        <span class="snitch-code"><% row_data[:snippet].each do |line_num, line_code| %><span class="<%= 'current-line' if line_num.to_s.to_i == line_number %>"><%= line_num %> <%= line_code %></span><br><% end %></span>
       </div>
     <% end %>
   </div>
@@ -149,21 +149,21 @@
   <div id="backtrace" class="snitch-section">
     <h3>Full Backtrace</h3>
     <div class="line-trace cap-height">
-      <code><%= @occurrence.backtrace.join("\n") %></code>
+      <span class="snitch-code"><%= @occurrence.backtrace.join("\n") %></span>
     </div>
   </div>
 
   <div id="context" class="snitch-section">
     <h3>Context</h3>
     <div class="line-trace">
-      <code><%= JSON.pretty_generate @occurrence.context %></code>
+      <span class="snitch-code"><%= JSON.pretty_generate @occurrence.context %></span>
     </div>
   </div>
 
   <div id="environment" class="snitch-section">
     <h3>Environment</h3>
     <div class="line-trace">
-      <code><%= JSON.pretty_generate @occurrence.headers %></code>
+      <span class="snitch-code"><%= JSON.pretty_generate @occurrence.headers %></span>
     </div>
   </div>
 
