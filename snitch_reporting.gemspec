@@ -6,6 +6,7 @@ require "snitch_reporting/version"
 # Update version lib/snitch_reporting/version.rb
 # `gem build snitch_reporting.gemspec`
 # Commit changes
+# PUSH changes
 # `gem push snitch_reporting-1.0.3.gem`
 
 # Describe your gem and declare its dependencies:
