@@ -112,7 +112,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
         status: {
           default: :unresolved,
           values: [:all, :resolved, :unresolved]
-        },
+        }
         # assignee: {
         #   default: :any,
         #   values: [:any, :me, :not_me, :not_assigned]

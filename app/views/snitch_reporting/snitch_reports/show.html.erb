@@ -91,10 +91,14 @@
           </todo>
         </div>
       </div> -->
-      <!-- <div class="snitch-tr">
-        <div class="snitch-td">Tags <todo>(edit)</todo></div>
-        <div class="snitch-td"><%= @report.tags %></div>
-      </div> -->
+      <div class="snitch-tr">
+        <div class="snitch-td">Tags</div>
+        <div class="snitch-td">
+          <% @report.tags.each_with_index do |tag, idx| %>
+            <span class="snitch-tag"><%= tag %></span><%= ', ' if idx < @report.tags.length - 1 %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 

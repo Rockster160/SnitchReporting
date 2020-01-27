@@ -24,6 +24,8 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   # belongs_to :resolved_by
   # belongs_to :ignored_by
 
+  serialize :tags, ::SnitchReporting::Service::JSONWrapper
+
   scope :resolved,      -> { where.not(resolved_at: nil) }
   scope :unresolved,    -> { where(resolved_at: nil) }
   scope :ignored,       -> { where.not(ignored_at: nil) }
@@ -199,7 +201,9 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       # Not using find or create because the slug might be `nil`- in these
       #   cases, we want to create a new report so that we don't falsely group
       #   unrelated errors together.
-      report || create(report_identifiable_data)
+      report ||= create(report_identifiable_data)
+      report.add_tags(arg_hash.delete(:tags))
+      report
     end
 
     def gather_report_data(env, exceptions, arg_hash, arg_values)
@@ -260,6 +264,20 @@ class SnitchReporting::SnitchReport < ApplicationRecord
 
   def tracker_for_date(date=Date.today)
     trackers.tracker_for_date(date)
+  end
+
+  def tags
+    super || []
+  end
+
+  def tags=(new_tags)
+    super((new_tags.try(:to_a) || [new_tags]).compact.flatten)
+  end
+
+  def add_tags(new_tags)
+    return if new_tags.blank?
+
+    update(tags: tags + [new_tags])
   end
 
   def resolved?; resolved_at?; end

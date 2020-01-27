@@ -74,6 +74,13 @@ todo {
   white-space: pre;
 }
 
+.snitch-tag {
+  border-radius: 4px;
+  background: $border-grey;
+  padding: 3px 5px;
+  white-space: nowrap;
+}
+
 .snitch-resolution-switch {
   -webkit-appearance: none;
   -moz-appearance: none;

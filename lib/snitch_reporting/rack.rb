@@ -4,7 +4,12 @@ class SnitchReporting::Rack
 
   def initialize(app, notify_callback=nil)
     @app = app
-    @notify_callback = notify_callback
+
+    return unless notify_callback.present?
+
+    ::SnitchReporting.define_singleton_method :notify do |occurrence|
+      notify_callback.call(occurrence)
+    end
   end
 
   def call(env)
@@ -20,7 +25,6 @@ class SnitchReporting::Rack
     response
   rescue Exception => exception
     occurrence = ::SnitchReporting::SnitchReport.fatal(exception, env: env)
-    notify_callback.call(occurrence) if occurrence.notify?
 
     raise exception unless exception.is_a?(SnitchException)
 

@@ -118,6 +118,12 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   #   temp_details
   # end
 
+  def notify_occurrence
+    return unless notify?
+
+    SnitchReporting.notify(self)
+  end
+
   def notify?
     @should_notify ||= always_notify || report.resolved? || report.occurrence_count == 1
   end
@@ -125,7 +131,7 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   private
 
   def mark_occurrence
-    notify? # Store ivar
+    notify_occurrence
     report_updates = { last_occurrence_at: Time.current, resolved_at: nil }
     report_updates[:first_occurrence_at] = Time.current if report.first_occurrence_at.nil?
     report_updates[:occurrence_count] = report.occurrence_count.to_i + 1
