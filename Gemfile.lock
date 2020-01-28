@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    snitch_reporting (1.0.1)
+    snitch_reporting (1.0.7)
       kaminari
       rails (>= 5.0.0)
       sass-rails

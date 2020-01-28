@@ -63,7 +63,6 @@
                   <span class="snitch-tag"><%= tag %></span><%= ', ' if idx < report.tags.length - 1 %>
                 <% end %>
               </div>
-              <!-- <div class="snitch-td"><%= report.assigned_to.try(:name).presence || "-" %></div> -->
               <div class="snitch-td">
                 <%= content_tag :input, "", type: :checkbox, name: :resolved, class: "snitch-resolution-switch", checked: report.resolved?, data: { mark_resolution_url: snitch_report_url(report) } %>
               </div>

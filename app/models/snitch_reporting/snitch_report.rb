@@ -20,7 +20,6 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   has_many :histories, class_name: "SnitchReporting::SnitchHistory", foreign_key: :report_id
 
   # belongs_to :assigned_to
-  def assigned_to; end
   # belongs_to :resolved_by
   # belongs_to :ignored_by
 
