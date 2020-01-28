@@ -126,7 +126,7 @@
   <div id="params" class="snitch-section">
     <h3>Params</h3>
     <div class="line-trace">
-      <span class="snitch-code"><%= JSON.pretty_generate(@occurrence.params) %></span>
+      <span class="snitch-code"><%= JSON.pretty_generate(@occurrence.params.presence || {}) %></span>
     </div>
   </div>
 
