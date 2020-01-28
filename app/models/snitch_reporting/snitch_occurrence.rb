@@ -55,10 +55,10 @@ class SnitchReporting::SnitchOccurrence < ApplicationRecord
   def backtrace=(trace_lines)
     already_traced = []
     self.backtrace_data = trace_lines.map do |trace_line|
-      next unless trace_line.include?("/app/") # && trace_line.exclude?("app/models/snitch_reporting")
+      next unless trace_line.include?("/app/")
 
       joined_path = file_lines_from_backtrace(trace_line)
-      next if joined_path.include?(joined_path)
+      next if already_traced.include?(joined_path)
       already_traced << joined_path
 
       file_path, line_number = joined_path.split(":", 2)
