@@ -270,7 +270,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   end
 
   def tags=(new_tags)
-    super((new_tags.try(:to_a) || [new_tags]).compact.flatten)
+    super((new_tags.try(:to_a) || [new_tags]).compact.flatten.uniq)
   end
 
   def add_tags(new_tags)
