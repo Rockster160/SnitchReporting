@@ -1,27 +1,28 @@
 <div class="snitch-reporting">
-  <!--
-    <div class="nav-tab">
-      <input type="search" name="search" value="<%= params[:search] %>" placeholder="Search">
-    </div>
-   -->
-  <div class="filters">
-    <% @filter_sets.each do |filter_name, filter_set| %>
-      <div class="snitch-table filter-table">
-        <div class="snitch-tr">
-          <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
-        </div>
 
-        <% selected_filter_value = @filters[filter_name] %>
-        <% default_filter_value = filter_set[:default] %>
-        <% filter_set[:values].each do |filter_value| %>
+  <%= form_tag "", class: "snitch-search-area" do %>
+    <button type="submit" name="button">Filter</button>
+    <input type="text" name="search" value="<%= params[:search] %>">
+
+    <div class="filters">
+      <% @filter_sets.each do |filter_name, filter_set| %>
+        <div class="snitch-table filter-table">
+          <div class="snitch-tr">
+            <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
+          </div>
+          <% selected_filter_value = @filters[filter_name] %>
+          <% default_filter_value = filter_set[:default] %>
+          <% filter_set[:values].each do |filter_value| %>
+
           <div class="snitch-tr">
             <% url_value = filter_value == default_filter_value ? @filters[:set_filters].except(filter_name) : @filters[:set_filters].merge(filter_name => filter_value) %>
             <%= link_to filter_value.to_s.titleize, url_value, class: "snitch-td link-cell #{'selected' if selected_filter_value == filter_value}" %>
           </div>
         <% end %>
       </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+  <% end %>
 
   <div class="snitch-index">
     <div class="snitch-title-section">
