@@ -1,3 +1,5 @@
+//= require_tree .
+
 document.addEventListener("change", function(evt) {
   if (evt.target && evt.target.hasAttribute("data-mark-resolution-url")) {
     var report_url = evt.target.getAttribute("data-mark-resolution-url")

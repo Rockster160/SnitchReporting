@@ -1,27 +1,28 @@
 <div class="snitch-reporting">
 
-  <%= form_tag "", class: "snitch-search-area" do %>
+  <%= form_tag interpret_search_path, class: "snitch-search-area" do %>
     <button type="submit" name="button">Filter</button>
-    <input type="text" name="search" value="<%= params[:search] %>">
+    <input type="text" name="filter_string" value="<%= @filter_string %>">
+    <label for="search">
+      <div class="filters">
+        <% @filter_sets.each do |filter_name, filter_set| %>
+          <div class="snitch-table filter-table">
+            <div class="snitch-tr">
+              <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
+            </div>
+            <% selected_filter_value = @filters[filter_name] %>
+            <% default_filter_value = filter_set[:default] %>
 
-    <div class="filters">
-      <% @filter_sets.each do |filter_name, filter_set| %>
-        <div class="snitch-table filter-table">
-          <div class="snitch-tr">
-            <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
-          </div>
-          <% selected_filter_value = @filters[filter_name] %>
-          <% default_filter_value = filter_set[:default] %>
-          <% filter_set[:values].each do |filter_value| %>
-
-          <div class="snitch-tr">
-            <% url_value = filter_value == default_filter_value ? @filters[:set_filters].except(filter_name) : @filters[:set_filters].merge(filter_name => filter_value) %>
-            <%= link_to filter_value.to_s.titleize, url_value, class: "snitch-td link-cell #{'selected' if selected_filter_value == filter_value}" %>
+            <% filter_set[:values].each do |filter_value| %>
+              <div class="snitch-tr">
+                <%= link_to filter_value.to_s.titleize, {}, class: "snitch-td link-cell", data: { default: filter_value == default_filter_value, filter_name: filter_name, filter_value: filter_value } %>
+              </div>
+            <% end %>
           </div>
         <% end %>
+        <span class="close-filters">(X)</span>
       </div>
-      <% end %>
-    </div>
+    </label>
   <% end %>
 
   <div class="snitch-index">
