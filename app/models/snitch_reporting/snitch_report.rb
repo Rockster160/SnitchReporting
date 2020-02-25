@@ -268,7 +268,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   end
 
   def tags
-    super || []
+    (super || []).uniq
   end
 
   def tags=(new_tags)
@@ -278,7 +278,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   def add_tags(new_tags)
     return if new_tags.blank?
 
-    update(tags: tags + [new_tags])
+    update(tags: (tags + [new_tags]).compact.flatten.uniq)
   end
 
   def resolved?; resolved_at?; end
