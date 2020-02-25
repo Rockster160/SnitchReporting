@@ -7,7 +7,7 @@ require "snitch_reporting/version"
 # `gem build snitch_reporting.gemspec`
 # Commit changes
 # PUSH changes
-# `gem push snitch_reporting-1.0.3.gem`
+# `gem push snitch_reporting-1.1.1.gem`
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|

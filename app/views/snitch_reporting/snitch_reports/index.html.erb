@@ -2,7 +2,7 @@
 
   <%= form_tag interpret_search_path, class: "snitch-search-area" do %>
     <button type="submit" name="button">Filter</button>
-    <input type="text" name="filter_string" value="<%= @filter_string %>">
+    <input type="text" name="filter_string" value="<%= @filter_string %>" autocomplete="off">
     <label for="search">
       <div class="filters">
         <% @filter_sets.each do |filter_name, filter_set| %>
