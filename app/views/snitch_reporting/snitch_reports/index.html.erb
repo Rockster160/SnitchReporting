@@ -6,21 +6,18 @@
     <label for="search">
       <div class="filters">
         <% @filter_sets.each do |filter_name, filter_set| %>
-          <div class="snitch-table filter-table">
+          <div class="snitch-table filter-table" data-filter-name="<%= filter_name %>" data-default="<%= filter_set[:default] %>">
             <div class="snitch-tr">
               <div class="snitch-th"><%= filter_name.to_s.titleize %></div>
             </div>
-            <% selected_filter_value = @filters[filter_name] %>
-            <% default_filter_value = filter_set[:default] %>
 
             <% filter_set[:values].each do |filter_value| %>
               <div class="snitch-tr">
-                <%= link_to filter_value.to_s.titleize, {}, class: "snitch-td link-cell", data: { default: filter_value == default_filter_value, filter_name: filter_name, filter_value: filter_value } %>
+                <%= link_to filter_value.to_s.titleize, {}, class: "snitch-td link-cell filter-cell", data: { filter_name: filter_name, filter_value: filter_value } %>
               </div>
             <% end %>
           </div>
         <% end %>
-        <span class="close-filters">(X)</span>
       </div>
     </label>
   <% end %>
