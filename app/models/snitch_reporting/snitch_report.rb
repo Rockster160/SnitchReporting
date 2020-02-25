@@ -54,7 +54,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       env, klass, base_exception = extract_base_variables(exceptions, arg_hash, arg_values)
       always_notify = arg_hash.delete(:always_notify)
 
-      report_title = retrieve_report_title(base_exception, arg_hash)
+      report_title = retrieve_report_title(base_exception, arg_hash, arg_values)
       report = retrieve_or_create_existing_report(log_level, santize_title(report_title), env, base_exception, arg_hash)
       return SnitchReporting::SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.persisted?
 
@@ -160,13 +160,14 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       end
     end
 
-    def retrieve_report_title(exception, arg_hash)
+    def retrieve_report_title(exception, arg_hash, arg_values)
       report_title = arg_hash[:title].presence
       report_title ||= exception.try(:message).presence
       report_title ||= exception.try(:body).presence
-      report_title ||= exception.try(:class).presence
+      report_title ||= arg_values&.find { |arg_value| arg_value.is_a?(String) }
       report_title ||= (arg_hash[:klass] || arg_hash[:class]).presence
       report_title ||= trace_from_exception(exception).find { |row| row.include?("/app/") }
+      report_title ||= exception.try(:class).presence
       report_title
     end
 
