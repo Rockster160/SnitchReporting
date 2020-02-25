@@ -3,11 +3,7 @@ $:.push File.expand_path("lib", __dir__)
 # Maintain your gem's version:
 require "snitch_reporting/version"
 # To Release:
-# Update version lib/snitch_reporting/version.rb
-# `gem build snitch_reporting.gemspec`
-# Commit changes
-# PUSH changes
-# `gem push snitch_reporting-1.1.1.gem`
+# Run: updateGem <version>
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
