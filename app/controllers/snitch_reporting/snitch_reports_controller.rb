@@ -148,8 +148,9 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
       @reports = @reports.resolved if @filters[:status] == :resolved
       @reports = @reports.unresolved if @filters[:status] == :unresolved
       @reports = @reports.search(@filters[:search]) if @filters[:search].present?
-      #
       @reports = @reports.by_level(@filters[:log_level]) if @filters[:log_level].present?
+
+      @reports = @reports.by_tag(*@filters[:tag]) if @filters[:tag].any?
       # @reports = @reports.by_severity(@filters[:severity_tags]) if @filters[:severity_tags].present?
       # @reports = @reports.by_source(@filters[:source_tags]) if @filters[:source_tags].present?
       #
@@ -200,6 +201,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
       end
 
       search_strings = []
+      tag_strings = []
       filter_strings = temp_filter_string.split(" ").select do |filter_string|
         search_strings << filter_string unless filter_string.include?(":")
         filter_string.include?(":")
@@ -215,15 +217,25 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
           @filters[filter.to_sym] = value.to_sym
         elsif filter == "search"
           search_strings << decode_string(secret_key, value)
+        elsif filter == "tag" || filter == "tags"
+          tag_strings << decode_string(secret_key, value)
         else
           @unknown_strings << filter_string
         end
       end
 
       @filters[:search] = "\"#{search_strings.join(' ')}\"" if search_strings.any?
+      @filters[:tag] = tag_strings
 
       new_filter_strings = @filters.each_with_object([]) do |(filter_string, filter_value), filter_array|
-        filter_array << "#{filter_string}:#{filter_value}" if filter_value.present?
+        next unless filter_value.present?
+        if filter_value.is_a?(Array)
+          filter_value.each do |filter_value_i|
+            filter_array << "#{filter_string}:#{filter_value_i}"
+          end
+        else
+          filter_array << "#{filter_string}:#{filter_value}"
+        end
       end
 
       @filter_string = new_filter_strings.join(" ")

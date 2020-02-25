@@ -31,6 +31,18 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   scope :unignored,     -> { where(ignored_at: nil) }
   scope :by_level,      ->(*level_tags) { where(log_level: level_tags) }
   scope :search,        ->(text) { where("CONCAT(error, ' ', message) ILIKE :text", text: "%#{text}%") }
+  scope :by_tag, lambda { |*tags|
+    scopes = []
+    tags.each do |tag|
+      if tag[0] == "!"
+        tag[0] = ""
+        scopes << "tags !~* '(\\[|,).*\"#{tag}\".*(,|\\])'"
+      else
+        scopes << "tags ~* '(\\[|,).*\"#{tag}\".*(,|\\])'"
+      end
+    end
+    where(scopes.join(" AND "))
+  }
 
   enum log_level: {
     debug:   1,
