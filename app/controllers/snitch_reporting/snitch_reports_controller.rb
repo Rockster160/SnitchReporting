@@ -97,8 +97,8 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   #   end
   #
   #   def set_report_preferences
-  #     @report_preferences = begin
-  #       preferences = JSON.parse(session[:report_preferences].presence || "{}").symbolize_keys
+  #     @filters = begin
+  #       preferences = JSON.parse(session[:filters].presence || "{}").symbolize_keys
   #
   #       available_preferences = [:level_tags, :severity_tags, :source_tags, :resolved, :ignored]
   #       available_preferences.each do |pref_key|
@@ -107,7 +107,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   #         preferences.delete(pref_key) if pref_val == "all"
   #       end
   #
-  #       session[:report_preferences] = preferences.to_json
+  #       session[:filters] = preferences.to_json
   #       preferences
   #     end
   #   end
@@ -147,14 +147,14 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
 
       @reports = @reports.resolved if @filters[:status] == :resolved
       @reports = @reports.unresolved if @filters[:status] == :unresolved
-      # @reports = @reports.search(@report_preferences[:by_fuzzy_text]) if @report_preferences[:by_fuzzy_text].present?
+      @reports = @reports.search(@filters[:search]) if @filters[:search].present?
       #
-      # @reports = @reports.by_level(@report_preferences[:level_tags]) if @report_preferences[:level_tags].present?
-      # @reports = @reports.by_severity(@report_preferences[:severity_tags]) if @report_preferences[:severity_tags].present?
-      # @reports = @reports.by_source(@report_preferences[:source_tags]) if @report_preferences[:source_tags].present?
+      @reports = @reports.by_level(@filters[:log_level]) if @filters[:log_level].present?
+      # @reports = @reports.by_severity(@filters[:severity_tags]) if @filters[:severity_tags].present?
+      # @reports = @reports.by_source(@filters[:source_tags]) if @filters[:source_tags].present?
       #
-      # @reports = @report_preferences[:resolved].present? && truthy?(@report_preferences[:resolved]) ? @reports.resolved : @reports.unresolved
-      # @reports = @report_preferences[:ignored].present? && truthy?(@report_preferences[:ignored]) ? @reports.ignored : @reports.unignored
+      # @reports = @filters[:resolved].present? && truthy?(@filters[:resolved]) ? @reports.resolved : @reports.unresolved
+      # @reports = @filters[:ignored].present? && truthy?(@filters[:ignored]) ? @reports.ignored : @reports.unignored
     end
 
     def encode_string(token, str)
@@ -212,7 +212,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
           search_strings << value
         elsif @filter_sets.keys.include?(filter.to_s.to_sym)
           value = decode_string(secret_key, value)
-          @filters[filter.to_sym] = value
+          @filters[filter.to_sym] = value.to_sym
         elsif filter == "search"
           search_strings << decode_string(secret_key, value)
         else

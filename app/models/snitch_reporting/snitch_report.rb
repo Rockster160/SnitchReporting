@@ -30,6 +30,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
   scope :ignored,       -> { where.not(ignored_at: nil) }
   scope :unignored,     -> { where(ignored_at: nil) }
   scope :by_level,      ->(*level_tags) { where(log_level: level_tags) }
+  scope :search,        ->(text) { where("CONCAT(error, ' ', message) ILIKE :text", text: "%#{text}%") }
 
   enum log_level: {
     debug:   1,
