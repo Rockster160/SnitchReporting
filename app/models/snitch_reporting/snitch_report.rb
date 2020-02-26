@@ -86,7 +86,7 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       occurrence
     rescue StandardError => ex
       env ||= {}
-      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env, ex)
+      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env.inspect, ex.inspect)
     end
 
     def format_args(args)
