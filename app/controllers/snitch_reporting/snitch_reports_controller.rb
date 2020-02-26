@@ -7,6 +7,7 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
   layout "application"
 
     def index
+      ::SnitchReporting::SnitchReport.warn("Error", some: :data)
       @reports = ::SnitchReporting::SnitchReport.order("last_occurrence_at DESC NULLS LAST").page(params[:page]).per(params[:per] || 25)
 
       # set_report_preferences

@@ -8,6 +8,7 @@ gemspec
 
 gem "kaminari"
 gem "sass-rails"
+# gem "pry-rails"
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

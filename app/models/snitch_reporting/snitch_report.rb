@@ -67,7 +67,8 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       always_notify = arg_hash.delete(:always_notify)
 
       report_title = retrieve_report_title(base_exception, arg_hash, arg_values)
-      report = retrieve_or_create_existing_report(log_level, santize_title(report_title), env, base_exception, arg_hash)
+      report_error = retrieve_error_string(base_exception, arg_hash, arg_values)
+      report = retrieve_or_create_existing_report(log_level, santize_title(report_title), santize_title(report_error), env, base_exception, arg_hash)
       return SnitchReporting::SnitchReport.error("Failed to save report.", report.errors.full_messages) unless report.persisted?
 
       report_data = gather_report_data(env, exceptions, arg_hash, arg_values)
@@ -86,7 +87,8 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       occurrence
     rescue StandardError => ex
       env ||= {}
-      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env.inspect, ex.inspect)
+      binding.pry
+      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env.to_s, ex.to_s)
     end
 
     def format_args(args)
@@ -183,6 +185,15 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       report_title
     end
 
+    def retrieve_error_string(exception, arg_hash, arg_values)
+      report_error ||= arg_values&.find { |arg_value| arg_value.is_a?(String) }
+      report_error ||= (arg_hash[:klass] || arg_hash[:class]).presence
+      report_error ||= arg_hash&.first.to_s.presence
+      report_error ||= trace_from_exception(exception).find { |row| row.include?("/app/") }
+      report_error ||= exception.try(:class).presence
+      report_error
+    end
+
     def add_leftover_objects_to_report_data(report_data, exceptions, arg_hash, arg_values)
       report_data[:exceptions] = exceptions.map { |ex| "#{ex.try(:class)}: #{ex.try(:message)}" } if exceptions.present?
       report_data.merge!(arg_hash)
@@ -201,10 +212,10 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       report_title.to_s.gsub(regex_find_numbers_and_words_with_numbers, "").presence
     end
 
-    def retrieve_or_create_existing_report(log_level, sanitized_title, env, exception, arg_hash)
+    def retrieve_or_create_existing_report(log_level, sanitized_title, sanitized_error_msg, env, exception, arg_hash)
       report_identifiable_data = {
-        error:     (exception.try(:class) || sanitized_title.presence).to_s,
-        message:   sanitized_title.presence,
+        error:     sanitized_title.presence,
+        message:   sanitized_error_msg.presence,
         log_level: log_level,
         klass:     env&.dig(:"action_controller.instance").try(:class).to_s.split("::").last&.gsub("Controller", ""),
         action:    env&.dig(:"action_controller.instance").try(:action_name)
