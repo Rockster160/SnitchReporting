@@ -150,9 +150,9 @@ class ::SnitchReporting::SnitchReportsController < ApplicationController
     @reports = @reports.resolved if @filters[:status] == :resolved
     @reports = @reports.unresolved if @filters[:status] == :unresolved
     @reports = @reports.search(@filters[:search]) if @filters[:search].present?
-    @reports = @reports.by_level(@filters[:log_level]) if @filters[:log_level].present?
+    @reports = @reports.by_level(@filters[:log_level]) if @filters[:log_level].present? && @filters[:log_level] != :any
 
-    @reports = @reports.by_tag(*@filters[:tag]) if @filters[:tag].any?
+    @reports = @reports.by_tag(*@filters[:tags]) if @filters[:tags].present?
     # @reports = @reports.by_severity(@filters[:severity_tags]) if @filters[:severity_tags].present?
     # @reports = @reports.by_source(@filters[:source_tags]) if @filters[:source_tags].present?
     #

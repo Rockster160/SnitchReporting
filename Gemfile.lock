@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    snitch_reporting (1.2.1)
+    snitch_reporting (1.2.3)
       kaminari
       pry-rails
       rails (>= 5.0.0)
