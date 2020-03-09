@@ -10,7 +10,9 @@ document.addEventListener("click", function(event) {
     return applyFilter(event.target)
   }
 
-  document.querySelector(".filters").classList.remove("open")
+  if (document.querySelector(".filters")) {
+    document.querySelector(".filters").classList.remove("open")
+  }
 })
 
 function setupFilters() {
