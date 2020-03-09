@@ -1,6 +1,10 @@
 //= require_tree .
 
 document.addEventListener("change", function(evt) {
+  remoteCheckbox(evt)
+})
+
+function remoteCheckbox(evt) {
   if (evt.target && evt.target.hasAttribute("data-mark-resolution-url")) {
     var report_url = evt.target.getAttribute("data-mark-resolution-url")
     var data = JSON.stringify({
@@ -19,7 +23,7 @@ document.addEventListener("change", function(evt) {
       body: data
     })
   }
-})
+}
 
 // Must include Jquery
 // Or rewrite to use pure JS

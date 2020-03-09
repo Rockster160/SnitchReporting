@@ -1,10 +1,4 @@
-document.addEventListener("DOMContentLoaded", function(){
-  document.querySelector("[name=filter_string]").addEventListener("focus", function(event) {
-    document.querySelector(".filters").classList.add("open")
-  })
-
-  setNewFilters(document.querySelector("[name=filter_string]").value)
-});
+document.addEventListener("DOMContentLoaded", setupFilters)
 
 document.addEventListener("click", function(event) {
   if (event.target.matches(".filters") || event.target.matches("[name=filter_string]")) {
@@ -18,6 +12,16 @@ document.addEventListener("click", function(event) {
 
   document.querySelector(".filters").classList.remove("open")
 })
+
+function setupFilters() {
+  if (document.querySelector("[name=filter_string]")) {
+    document.querySelector("[name=filter_string]").addEventListener("focus", function(event) {
+      document.querySelector(".filters").classList.add("open")
+    })
+
+    setNewFilters(document.querySelector("[name=filter_string]").value)
+  }
+}
 
 function applyFilter(selected_cell) {
   var filter_field = document.querySelector("[name=filter_string]")
