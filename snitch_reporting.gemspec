@@ -3,7 +3,7 @@ $:.push File.expand_path("lib", __dir__)
 # Maintain your gem's version:
 require "snitch_reporting/version"
 # To Release:
-# Run: updateGem <version>
+# Run: gemUpdate <version>
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
