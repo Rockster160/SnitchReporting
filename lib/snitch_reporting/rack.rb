@@ -17,8 +17,7 @@ class SnitchReporting::Rack
     _, headers, = response
 
   #   if headers["X-Cascade"] == "pass"
-  #     msg = "This exception means that the preceding Rack middleware set the 'X-Cascade' header to 'pass' -- in " \
-  #     "Rails, this often means that the route was not found (404 error)."
+  #     msg = "This exception means that the preceding Rack middleware set the 'X-Cascade' header to 'pass' -- in Rails, this often means that the route was not found (404 error)."
   #     raise SnitchException, msg
   #   end
 

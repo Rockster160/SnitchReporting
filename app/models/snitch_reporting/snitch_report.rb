@@ -86,9 +86,9 @@ class SnitchReporting::SnitchReport < ApplicationRecord
       return SnitchReporting::SnitchReport.error("Failed to save occurrence.", occurrence.errors.full_messages) unless occurrence.persisted?
       occurrence
     rescue StandardError => ex
-      env ||= {}
-      binding.pry
-      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env.to_s, ex.to_s)
+      # env ||= {}
+      # SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})", env.to_s, ex.to_s)
+      SnitchReporting::SnitchReport.fatal("Failed to create report. (#{ex.class})")
     end
 
     def format_args(args)
